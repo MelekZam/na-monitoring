@@ -1,15 +1,25 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, KeyboardAvoidingView } from 'react-native'
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
-const LogIn = () => {
+const LogIn = ({navigation}) => {
   return (
-    <View style={styles.container}>
+    <View enabled={true} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
         <View style={styles.logoContainer}>
+            <Icon
+                name='angle-left'
+                size={40}
+                color='white'
+                style={{alignSelf:'flex-start',marginLeft:5}}
+                onPress={() => navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Welcome' }],
+                  })}
+            />
             <Animatable.Image
                     source={require('../assets/unDraw.png')}
                     animation='zoomInDown'
@@ -18,11 +28,13 @@ const LogIn = () => {
             />
         </View>
         <Animatable.View animation="fadeInUpBig" style={styles.logInContainer}>
-            <Text style={styles.headerTxt}>Log In</Text>
-            <Text style={styles.p}>Please sign in to continue.</Text>
+            <View style={styles.textBox}>
+                <Text style={styles.headerTxt}>Log In</Text>
+                <Text style={styles.p}>Please sign in to continue.</Text>
+            </View>
             <View style={styles.formContainer}>
                 <TextInput
-                    placeholder={'Username'}
+                    placeholder={'E-mail'}
                     style={styles.input}
                 />
                 <TextInput
@@ -55,11 +67,11 @@ const styles = StyleSheet.create({
         flex:3,
         margin: '5%',
         padding : 5,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     logo:{
-        height:200,
-        width: 300
+        height:175,
+        width: 275
     },
     headerTxt: {
         fontSize: 25,
@@ -79,13 +91,20 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         backgroundColor: 'white',
         marginBottom: 10,
-        borderColor: 'black'
+        borderColor: '#2196f3',
+        borderWidth: 1.5
       },
       formContainer: {
-        flex: 0.75,
+        paddingTop: 20,
         alignItems: 'center',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
+        flex: 3,
+      },
+      textBox: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'flex-end',
       }
 })
 
