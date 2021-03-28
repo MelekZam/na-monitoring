@@ -11,7 +11,7 @@ const Welcome = ({ navigation }) => {
     <View style={styles.container}>
         <View style={styles.logoContainer}>
             <Animatable.Image
-                source={require('../../assets/logo.png')}
+                source={require('../assets/logo.png')}
                 animation='bounceIn'
                 style={styles.logo}
                 duration={3500}
