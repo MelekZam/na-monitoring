@@ -10,16 +10,19 @@ const LogIn = ({navigation}) => {
   return (
     <View enabled={true} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
         <View style={styles.logoContainer}>
-            <Icon
-                name='angle-left'
-                size={40}
-                color='white'
-                style={{alignSelf:'flex-start',marginLeft:5}}
+            <TouchableOpacity 
+                style={{alignSelf: 'flex-start', marginLeft: 10, width: 20}}
                 onPress={() => navigation.reset({
                     index: 0,
                     routes: [{ name: 'Welcome' }],
-                  })}
-            />
+                })}
+            >
+                <Icon
+                    name='angle-left'
+                    size={40}
+                    color='white'
+                />
+            </TouchableOpacity>
             <Animatable.Image
                     source={require('../assets/unDraw.png')}
                     animation='zoomInDown'
