@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, KeyboardAvoidingView } from 'react-native'
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,52 +7,61 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 const LogIn = ({navigation}) => {
-  return (
-    <View enabled={true} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
-        <View style={styles.logoContainer}>
-            <TouchableOpacity 
-                style={{alignSelf: 'flex-start', marginLeft: 10, width: 20}}
-                onPress={() => navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Welcome' }],
-                })}
-            >
-                <Icon
-                    name='angle-left'
-                    size={40}
-                    color='white'
+
+    // state for the login input
+    const [ username, setUsername ] = useState('');
+    const [ password, setPassword ] = useState('');
+
+    return (
+        <View enabled={true} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
+            <View style={styles.logoContainer}>
+                <TouchableOpacity 
+                    style={{alignSelf: 'flex-start', marginLeft: 10, width: 20}}
+                    onPress={() => navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Welcome' }],
+                    })}
+                >
+                    <Icon
+                        name='angle-left'
+                        size={40}
+                        color='white'
+                    />
+                </TouchableOpacity>
+                <Animatable.Image
+                        source={require('../assets/unDraw.png')}
+                        animation='zoomInDown'
+                        style={styles.logo}
+                        duration={1000}
                 />
-            </TouchableOpacity>
-            <Animatable.Image
-                    source={require('../assets/unDraw.png')}
-                    animation='zoomInDown'
-                    style={styles.logo}
-                    duration={1000}
-            />
+            </View>
+            <Animatable.View animation="fadeInUpBig" style={styles.logInContainer}>
+                <View style={styles.textBox}>
+                    <Text style={styles.headerTxt}>Log In</Text>
+                    <Text style={styles.p}>Please sign in to continue.</Text>
+                </View>
+                <View style={styles.formContainer}>
+                    <TextInput
+                        placeholder={'Username'}
+                        style={styles.input}
+                        onChangeText = { (text) => setUsername(text) }
+                    />
+                    <TextInput
+                        placeholder={'Password'}
+                        secureTextEntry={true}
+                        style={styles.input}
+                        onChangeText = { (text) => setPassword(text) }
+                    />
+                    
+                    <Button
+                        title={'Login'}
+                        style={styles.input}
+                    />
+                </View>
+            </Animatable.View>
+            <Text>{password}</Text>
+            <Text>{username}</Text>
         </View>
-        <Animatable.View animation="fadeInUpBig" style={styles.logInContainer}>
-            <View style={styles.textBox}>
-                <Text style={styles.headerTxt}>Log In</Text>
-                <Text style={styles.p}>Please sign in to continue.</Text>
-            </View>
-            <View style={styles.formContainer}>
-                <TextInput
-                    placeholder={'E-mail'}
-                    style={styles.input}
-                />
-                <TextInput
-                    placeholder={'Password'}
-                    secureTextEntry={true}
-                    style={styles.input}
-                />
-                
-                <Button
-                    title={'Login'}
-                    style={styles.input}
-                />
-            </View>
-        </Animatable.View>
-    </View>
   )
 }
 
