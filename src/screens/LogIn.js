@@ -5,12 +5,27 @@ import { NavigationContainer } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import LoginRequest from '../../service/LoginRequest'
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const LogIn = ({navigation}) => {
 
     // state for the login input
     const [ username, setUsername ] = useState('');
     const [ password, setPassword ] = useState('');
+    // state to keep track of invalid login credentials
+    const [ wrongInputs, setValidInputs ] = useState(false);
+    const [ showAlert, setShowAlert ] = useState(false);
+
+    // send login request when pressing login
+    const onPress = () => {
+        const responseObject = LoginRequest(username, password)
+        !responseObject.result ? setShowAlert(true) : setValidInputs(true) 
+    }
+
+    const hideAlert = () => {
+        setShowAlert(false)
+    }
 
     return (
         <View enabled={true} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
@@ -56,11 +71,25 @@ const LogIn = ({navigation}) => {
                     <Button
                         title={'Login'}
                         style={styles.input}
+                        onPress={onPress}
                     />
                 </View>
             </Animatable.View>
-            <Text>{password}</Text>
-            <Text>{username}</Text>
+            <AwesomeAlert
+                show={showAlert}
+                showProgress={false}
+                title="Error"
+                message="Invalid login credentials !"
+                closeOnTouchOutside={true}
+                showCancelButton={false}
+                showConfirmButton={true}
+                confirmText="Okay!"
+                confirmButtonColor="#DD6B55"
+                contentContainerStyle={{width: 220 ,height:250,justifyContent: 'center'}}
+                onConfirmPressed={() => {
+                    hideAlert();
+                }}
+            />
         </View>
   )
 }
