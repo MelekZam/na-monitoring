@@ -6,9 +6,14 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import LoginRequest from '../../service/LoginRequest'
+import getUserMedia from '../../service/getUserMedia'
 import AwesomeAlert from 'react-native-awesome-alerts';
+import axios from 'axios'
+import { connect } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const LogIn = ({navigation}) => {
+
+const LogIn = ({navigation,dispatch}) => {
 
     // state for the login input
     const [ username, setUsername ] = useState('');
@@ -18,9 +23,37 @@ const LogIn = ({navigation}) => {
     const [ showAlert, setShowAlert ] = useState(false);
 
     // send login request when pressing login
-    const onPress = () => {
-        const responseObject = LoginRequest(username, password)
-        !responseObject.result ? setShowAlert(true) : setValidInputs(true) 
+    const onPress = async () => {
+        const response = await LoginRequest(username, password)
+        if ('result' in response) login(response.result)
+        else    setShowAlert(true)
+    }
+
+    const login = async (result) => {
+        try {
+            const verified = await AsyncStorage.getItem('verified')
+            if(verified === 'yes') {
+                await AsyncStorage.setItem('verified', 'yes')
+                await AsyncStorage.setItem('isLoggedIn', 'yes')
+                const user = await AsyncStorage.getItem('user')
+                const action = { type: 'LOGIN', value: { token: result.sessionid, id: result.userid, nickname: result.surname } }
+                const userObject = JSON.stringify(action.value)
+                await AsyncStorage.setItem('user',userObject)
+                dispatch(action)
+            } else {
+                const phoneNumber = await getUserMedia(result.userid,result.sessionid)
+                await axios.get(`http://192.168.1.23:3000/login?phonenumber=216${phoneNumber}&channel=sms`)
+                navigation.navigate('Verify', {
+                    phoneNumber,
+                    token: result.sessionid,
+                    id: result.userid,
+                    nickname: result.surname,
+                })
+            }
+          } catch(e) {
+            console.log(e)
+          }
+        
     }
 
     const hideAlert = () => {
@@ -28,68 +61,71 @@ const LogIn = ({navigation}) => {
     }
 
     return (
-        <View enabled={true} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
-            <View style={styles.logoContainer}>
-                <TouchableOpacity 
-                    style={{alignSelf: 'flex-start', marginLeft: 10, width: 20}}
-                    onPress={() => navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'Welcome' }],
-                    })}
-                >
-                    <Icon
-                        name='angle-left'
-                        size={40}
-                        color='white'
-                    />
-                </TouchableOpacity>
-                <Animatable.Image
-                        source={require('../assets/unDraw.png')}
-                        animation='zoomInDown'
-                        style={styles.logo}
-                        duration={1000}
-                />
-            </View>
-            <Animatable.View animation="fadeInUpBig" style={styles.logInContainer}>
-                <View style={styles.textBox}>
-                    <Text style={styles.headerTxt}>Log In</Text>
-                    <Text style={styles.p}>Please sign in to continue.</Text>
-                </View>
-                <View style={styles.formContainer}>
-                    <TextInput
-                        placeholder={'Username'}
-                        style={styles.input}
-                        onChangeText = { (text) => setUsername(text) }
-                    />
-                    <TextInput
-                        placeholder={'Password'}
-                        secureTextEntry={true}
-                        style={styles.input}
-                        onChangeText = { (text) => setPassword(text) }
-                    />
-                    
-                    <Button
-                        title={'Login'}
-                        style={styles.input}
-                        onPress={onPress}
-                    />
-                </View>
-            </Animatable.View>
+        <View style={{flex: 1}}>
             <AwesomeAlert
-                show={showAlert}
-                showProgress={false}
-                title="Error"
-                message="Invalid login credentials !"
-                closeOnTouchOutside={true}
-                showCancelButton={false}
-                showConfirmButton={true}
-                confirmText="Okay!"
-                confirmButtonColor="#DD6B55"
-                contentContainerStyle={{width: 220 ,height:250,justifyContent: 'center'}}
-                onConfirmPressed={() => {
-                    hideAlert();
-                }}
-            />
+                    show={showAlert}
+                    showProgress={false}
+                    title="Error"
+                    message="Invalid login credentials !"
+                    closeOnTouchOutside={true}
+                    showCancelButton={false}
+                    showConfirmButton={true}
+                    confirmText="Okay!"
+                    confirmButtonColor="#DD6B55"
+                    overlayStyle={{height:'100%'}}
+                    contentContainerStyle={{width: 220 ,height:250,justifyContent: 'center'}}
+                    onConfirmPressed={() => {
+                        hideAlert();
+                    }}
+                />
+            <View enabled={true} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
+                <View style={styles.logoContainer}>
+                    <TouchableOpacity 
+                        style={{alignSelf: 'flex-start', marginLeft: 10, width: 20}}
+                        onPress={() => navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Welcome' }],
+                        })}
+                    >
+                        <Icon
+                            name='angle-left'
+                            size={40}
+                            color='white'
+                        />
+                    </TouchableOpacity>
+                    <Animatable.Image
+                            source={require('../assets/unDraw.png')}
+                            animation='zoomInDown'
+                            style={styles.logo}
+                            duration={1000}
+                    />
+                </View>
+                <Animatable.View animation="fadeInUpBig" style={styles.logInContainer}>
+                    <View style={styles.textBox}>
+                        <Text style={styles.headerTxt}>Log In</Text>
+                        <Text style={styles.p}>Please sign in to continue.</Text>
+                    </View>
+                    <View style={styles.formContainer}>
+                        <TextInput
+                            placeholder={'Username'}
+                            style={styles.input}
+                            onChangeText = { (text) => setUsername(text) }
+                        />
+                        <TextInput
+                            placeholder={'Password'}
+                            secureTextEntry={true}
+                            style={styles.input}
+                            onChangeText = { (text) => setPassword(text) }
+                        />
+                        
+                        <Button
+                            title={'Login'}
+                            style={styles.input}
+                            onPress={onPress}
+                        />
+                    </View>
+                </Animatable.View>
+            </View>
         </View>
   )
 }
@@ -149,4 +185,8 @@ const styles = StyleSheet.create({
       }
 })
 
-export default LogIn;
+const mapStateToProps = (state) => {
+    return state;
+  }
+  
+  export default connect(mapStateToProps)(LogIn);

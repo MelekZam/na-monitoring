@@ -1,12 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { connect } from 'react-redux'
 
-const Welcome = ({ navigation }) => {
+const Welcome = ({ navigation,user,isLoggedIn, dispatch }) => {
+    useEffect( async () => {
+        try {
+            const value = await AsyncStorage.getItem('verified')
+            const checkLogin = await AsyncStorage.getItem('isLoggedIn')
+            const x = await AsyncStorage.getItem('user')
+            const y = JSON.parse(x)
+            if (checkLogin === 'yes') {
+                const x = await AsyncStorage.getItem('user')
+                const y = JSON.parse(x)
+                const action = { type: 'LOGIN', value: y }
+                dispatch(action)
+            }
+          } catch(e) {
+            console.log(e)
+          }
+    })
   return (
     <View style={styles.container}>
         <View style={styles.logoContainer}>
@@ -101,4 +119,9 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Welcome;
+
+const mapStateToProps = (state) => {
+    return state;
+  }
+  
+  export default connect(mapStateToProps)(Welcome);
