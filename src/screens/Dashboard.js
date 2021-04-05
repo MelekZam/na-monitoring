@@ -8,7 +8,6 @@ const Dashboard = (props) => {
   const onPress = async () => {
     await LogoutRequest(props.user.token)
     try {
-      //await AsyncStorage.removeItem('verified')
       await AsyncStorage.removeItem('user')
       await AsyncStorage.removeItem('isLoggedIn')
     } catch(e) {

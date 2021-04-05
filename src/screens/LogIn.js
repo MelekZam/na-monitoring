@@ -19,30 +19,28 @@ const LogIn = ({navigation,dispatch}) => {
     const [ username, setUsername ] = useState('');
     const [ password, setPassword ] = useState('');
     // state to keep track of invalid login credentials
-    const [ wrongInputs, setValidInputs ] = useState(false);
     const [ showAlert, setShowAlert ] = useState(false);
 
     // send login request when pressing login
     const onPress = async () => {
         const response = await LoginRequest(username, password)
         if ('result' in response) login(response.result)
-        else    setShowAlert(true)
+        else    { setShowAlert(true); setPassword(''); setUsername('')}
     }
 
     const login = async (result) => {
         try {
             const verified = await AsyncStorage.getItem('verified')
-            if(verified === 'yes') {
-                await AsyncStorage.setItem('verified', 'yes')
+            if(verified === 'yes') { // if the devide is already verified through twilio ==> login and go to dashboard
                 await AsyncStorage.setItem('isLoggedIn', 'yes')
-                const user = await AsyncStorage.getItem('user')
                 const action = { type: 'LOGIN', value: { token: result.sessionid, id: result.userid, nickname: result.surname } }
                 const userObject = JSON.stringify(action.value)
                 await AsyncStorage.setItem('user',userObject)
                 dispatch(action)
-            } else {
+            } else { // else go to verification screen
                 const phoneNumber = await getUserMedia(result.userid,result.sessionid)
-                await axios.get(`http://172.29.26.15:3000/login?phonenumber=216${phoneNumber}&channel=sms`)
+                console.log(result.sessionid)
+                await axios.get(`http://192.168.1.24:3000/login?phonenumber=216${phoneNumber}&channel=sms`) // send request to localhost node server to send sms to the user's phone using twilio services
                 navigation.navigate('Verify', {
                     phoneNumber,
                     token: result.sessionid,
@@ -107,11 +105,13 @@ const LogIn = ({navigation,dispatch}) => {
                     </View>
                     <View style={styles.formContainer}>
                         <TextInput
+                            value={username}
                             placeholder={'Username'}
                             style={styles.input}
                             onChangeText = { (text) => setUsername(text) }
                         />
                         <TextInput
+                            value={password}
                             placeholder={'Password'}
                             secureTextEntry={true}
                             style={styles.input}

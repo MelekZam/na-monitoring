@@ -1,5 +1,6 @@
+import { zabbixURL }  from './Config'
 const LoginRequest = async (username, password) => {
-    const url = new URL('http://172.29.26.94/zabbix/api_jsonrpc.php')
+    const url = new URL(zabbixURL)
     const rawResponse = await fetch(url, {
         method: 'POST',
         headers: {
@@ -18,7 +19,6 @@ const LoginRequest = async (username, password) => {
         })
     })
     const response = await rawResponse.json()
-    console.log(response)
     return response
 }
 export default LoginRequest;

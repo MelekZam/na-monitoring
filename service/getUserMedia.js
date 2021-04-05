@@ -1,5 +1,6 @@
+import { zabbixURL }  from './Config'
 const getUserMedia = async (id, token) => {
-    const url = new URL('http://172.29.26.94/zabbix/api_jsonrpc.php')
+    const url = new URL(zabbixURL)
     const rawResponse = await fetch(url, {
         method: 'POST',
         headers: {
@@ -20,7 +21,6 @@ const getUserMedia = async (id, token) => {
     result = (response.result[0].medias).filter(item => {
         return item.mediatypeid === '3'
     })
-    console.log(result)
     return result[0].sendto
 }
 export default getUserMedia;

@@ -8,15 +8,10 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { connect } from 'react-redux'
 
-const Welcome = ({ navigation,user,isLoggedIn, dispatch }) => {
+const Welcome = ({ navigation, dispatch }) => {
     useEffect( async () => {
         try {
-            const value = await AsyncStorage.getItem('verified')
             const checkLogin = await AsyncStorage.getItem('isLoggedIn')
-            const x = await AsyncStorage.getItem('user')
-            const y = JSON.parse(x)
-            console.log(value, checkLogin,y)
-            console.log(user)
             if (checkLogin === 'yes') {
                 const x = await AsyncStorage.getItem('user')
                 const y = JSON.parse(x)

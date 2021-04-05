@@ -1,0 +1,1 @@
+export const zabbixURL = 'http://192.168.1.19/zabbix/api_jsonrpc.php';
