@@ -35,7 +35,9 @@ const Verify = ({navigation, route,dispatch}) => {
     
     //submit code
     const submitCode = async (code) => {
-        const response = await axios.get(`http://192.168.1.23:3000/verify?phonenumber=216${route.params.phoneNumber}&code=${code}`)
+        console.log(route.params)
+        const response = await axios.get(`http://172.29.26.15:3000/verify?phonenumber=216${route.params.phoneNumber}&code=${code}`)
+        console.log('valid: ', response.data.valid)
         if (response.data.valid){
             const user = {
                 nickname: route.params.nickname,
@@ -44,7 +46,7 @@ const Verify = ({navigation, route,dispatch}) => {
             }
             console.log(user)
             try {
-                await AsyncStorage.setItem('verified', 'yes')
+                await AsyncStorage.setItem('verified','yes')
                 await AsyncStorage.setItem('isLoggedIn', 'yes')
                 const jsonUser = JSON.stringify(user)
                 await AsyncStorage.setItem('user',jsonUser)
@@ -59,7 +61,7 @@ const Verify = ({navigation, route,dispatch}) => {
     // resend code
     const resendOTP = async () => {
         setResendButtonDisabledTime(30);
-        await axios.get(`http://192.168.1.23:3000/login?phonenumber=216${route.params.phoneNumber}&channel=sms`)
+        await axios.get(`http://172.29.26.15:3000/login?phonenumber=216${route.params.phoneNumber}&channel=sms`)
     }
     return (
         <View style={{flex: 1}}>

@@ -42,7 +42,7 @@ const LogIn = ({navigation,dispatch}) => {
                 dispatch(action)
             } else {
                 const phoneNumber = await getUserMedia(result.userid,result.sessionid)
-                await axios.get(`http://192.168.1.23:3000/login?phonenumber=216${phoneNumber}&channel=sms`)
+                await axios.get(`http://172.29.26.15:3000/login?phonenumber=216${phoneNumber}&channel=sms`)
                 navigation.navigate('Verify', {
                     phoneNumber,
                     token: result.sessionid,

@@ -1,5 +1,5 @@
 const getUserMedia = async (id, token) => {
-    const url = new URL('http://192.168.1.19/zabbix/api_jsonrpc.php')
+    const url = new URL('http://172.29.26.94/zabbix/api_jsonrpc.php')
     const rawResponse = await fetch(url, {
         method: 'POST',
         headers: {

@@ -15,6 +15,8 @@ const Welcome = ({ navigation,user,isLoggedIn, dispatch }) => {
             const checkLogin = await AsyncStorage.getItem('isLoggedIn')
             const x = await AsyncStorage.getItem('user')
             const y = JSON.parse(x)
+            console.log(value, checkLogin,y)
+            console.log(user)
             if (checkLogin === 'yes') {
                 const x = await AsyncStorage.getItem('user')
                 const y = JSON.parse(x)
