@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from '../screens/Welcome'
 import LogIn from '../screens/LogIn'
 import Verify from '../screens/Verify'
-import Dashboard from '../screens/Dashboard';
+import DashboardStack from '../routes/DashboardStack';
 import { connect } from 'react-redux'
 // import Store from '../../redux/store/ConfigureStore'
 // import userInfo from '../../redux/reducers/reducer'
@@ -35,8 +35,11 @@ const WelcomeStack = (props) => {
             />
           </>) : (<>
             <Stack.Screen
-              name='Dashboard'
-              component={Dashboard}
+              name='DashboardStack'
+              component={DashboardStack}
+              options={{
+                headerShown: false
+              }}
             />
           </>)
           }
