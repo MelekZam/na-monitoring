@@ -37,7 +37,7 @@ const Welcome = ({ navigation, dispatch }) => {
             animation="fadeInUpBig"
         >
             <View style={styles.insideContainer}>
-                <Text style={styles.headerTxt}>Monitor Your Network from Your Phone </Text>
+                <Text style={styles.headerTxt}>Monitor Your Network from Your Phone</Text>
                 <Text>Now you can monitor all the devices connected to your network from anywhere.</Text>
                 <View style={styles.btn}>
                     <TouchableOpacity onPress={ () => navigation.navigate('LogIn')} >
