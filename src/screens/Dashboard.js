@@ -4,6 +4,7 @@ import { color } from 'react-native-reanimated'
 import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
 import Donut from '../components/shared/Donut'
+import getHosts from '../../service/getHosts'
 
 const Dashboard = (props) => {
   const data = [{
@@ -42,6 +43,7 @@ const Dashboard = (props) => {
                     return <Donut key={i} percentage={p.percentage} color={p.color} delay={500 + 100 * i} max={p.max}/>
                   })}
             </View>
+            
           </View>
         </View>
       </View>
