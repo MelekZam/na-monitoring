@@ -1,10 +1,14 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet,Button } from 'react-native'
+import GetProblems from '../../service/GetProblems'
+import { connect } from 'react-redux'
 
-const Problems = () => {
+
+const Problems = (props) => {
     return (
         <View style={styles.container}>
             <Text style={{color:'#FFF'}}>Problems</Text>
+            <Button title='get' onPress={ () => GetProblems(props.user.token)}/>
         </View>
     )
 }
@@ -14,4 +18,9 @@ const styles = StyleSheet.create({
       backgroundColor: '#16171B'
     }
   })
-export default Problems;
+
+  const mapStateToProps = (state) => {
+    return state;
+  }
+  
+  export default connect(mapStateToProps)(Problems);

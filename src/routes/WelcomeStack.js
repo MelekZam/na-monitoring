@@ -8,6 +8,7 @@ import LogIn from '../screens/LogIn'
 import Verify from '../screens/Verify'
 import DashboardStack from '../routes/DashboardStack';
 import { connect } from 'react-redux'
+import Loading from '../screens/Loading';
 // import Store from '../../redux/store/ConfigureStore'
 // import userInfo from '../../redux/reducers/reducer'
 
@@ -34,6 +35,9 @@ const WelcomeStack = (props) => {
               component={Verify}
             />
           </>) : (<>
+            <Stack.Screen name='Loading' component={Loading} options={{
+                headerShown: false
+            }}/>
             <Stack.Screen
               name='DashboardStack'
               component={DashboardStack}
