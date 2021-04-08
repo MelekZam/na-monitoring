@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
 import Donut from '../components/shared/Donut'
 import getHosts from '../../service/getHosts'
+import DropDown from '../components/Dropdown'
 
 const Dashboard = (props) => {
   const data = [{
@@ -26,6 +27,7 @@ const Dashboard = (props) => {
   }]
   return (
       <View style={styles.container}>
+        
         <View style={styles.contentContainer}>
           <View style={styles.content}>
             <View style={styles.titleBox}>
@@ -42,9 +44,11 @@ const Dashboard = (props) => {
                   {data.map((p, i) => {
                     return <Donut key={i} percentage={p.percentage} color={p.color} delay={500 + 100 * i} max={p.max}/>
                   })}
-            </View>
-            
+            </View>  
           </View>
+        </View>
+        <View style={styles.contentContainer}>
+          <DropDown />
         </View>
       </View>
   )
@@ -76,6 +80,7 @@ const styles = StyleSheet.create({
   },
   titleBox: {
     backgroundColor: '#291756',
+    width:'100%',
     borderRadius: 5,
     elevation: 2,
     shadowColor: '#1F1F23',

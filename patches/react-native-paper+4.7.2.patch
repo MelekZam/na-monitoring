@@ -1,0 +1,39 @@
+diff --git a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
+index 38d380b..b465de6 100644
+--- a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
++++ b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
+@@ -156,7 +156,7 @@ const ListAccordion = ({
+     }
+   };
+ 
+-  const titleColor = color(theme.colors.text).alpha(0.87).rgb().string();
++  const titleColor = 'white'
+   const descriptionColor = color(theme.colors.text).alpha(0.54).rgb().string();
+ 
+   const expandedInternal = expandedProp !== undefined ? expandedProp : expanded;
+diff --git a/node_modules/react-native-paper/src/components/List/ListIcon.tsx b/node_modules/react-native-paper/src/components/List/ListIcon.tsx
+index e57f279..a50bb5e 100644
+--- a/node_modules/react-native-paper/src/components/List/ListIcon.tsx
++++ b/node_modules/react-native-paper/src/components/List/ListIcon.tsx
+@@ -43,7 +43,7 @@ const ICON_SIZE = 24;
+  */
+ const ListIcon = ({ icon, color: iconColor, style }: Props) => (
+   <View style={[styles.item, style]} pointerEvents="box-none">
+-    <Icon source={icon} size={ICON_SIZE} color={iconColor} />
++    <Icon source={icon} size={ICON_SIZE} color='white' />
+   </View>
+ );
+ 
+diff --git a/node_modules/react-native-paper/src/components/List/ListItem.tsx b/node_modules/react-native-paper/src/components/List/ListItem.tsx
+index 1110fae..de3a38a 100644
+--- a/node_modules/react-native-paper/src/components/List/ListItem.tsx
++++ b/node_modules/react-native-paper/src/components/List/ListItem.tsx
+@@ -166,7 +166,7 @@ const ListItem = ({
+     );
+   };
+ 
+-  const titleColor = color(theme.colors.text).alpha(0.87).rgb().string();
++  const titleColor = 'white'
+   const descriptionColor = color(theme.colors.text).alpha(0.54).rgb().string();
+ 
+   return (
