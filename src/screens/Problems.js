@@ -15,7 +15,7 @@ const Problems = ({ problems }) => {
             <View style={{width:75}}><HostBox color={severityColor[item.severity-1]} number={null} status={severityDesc[item.severity-1]}/></View>
             <View style={styles.textBox}>
               <Text style={{color:'white',fontSize:15}}>{item.name}</Text>
-              <Text style={{color:'lightgrey',fontSize:10}}>Acknowledged : {item.acknowledged === '1' ? 'Yes' : 'No'}</Text>
+              <Text style={{color:'grey',fontSize:10}}>Acknowledged : {item.acknowledged === '1' ? 'Yes' : 'No'}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -47,12 +47,14 @@ const styles = StyleSheet.create({
       shadowOffset: { width: 0, height: 10},
       shadowOpacity: 0.5,
       elevation: 1.5,
-      padding: 5
+      padding: 5,
+      width:350
     },
     textBox:{
       marginLeft: 10,
       flexDirection: 'column',
-      justifyContent:'space-around'
+      justifyContent:'space-around',
+      flexShrink: 1
     }
   })
 

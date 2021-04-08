@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet,Button } from 'react-native'
+import { View, Text, StyleSheet,Button,ScrollView } from 'react-native'
 import { color } from 'react-native-reanimated'
 import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
@@ -29,7 +29,8 @@ const Dashboard = ({ hosts, problems }) => {
 
 
   return (
-      <View style={styles.container}>
+    <View style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false} >
         <View style={styles.contentContainer}>
           <View style={styles.content}>
             <View style={styles.titleBox}>
@@ -52,6 +53,7 @@ const Dashboard = ({ hosts, problems }) => {
         <View style={styles.contentContainer}>
           <DropDown network={hosts.network} system={hosts.system} />
         </View>
+      </ScrollView>
       </View>
   )
 }
