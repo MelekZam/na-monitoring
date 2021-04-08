@@ -1,9 +1,24 @@
+import { State } from "react-native-gesture-handler";
+
 const initialState = {user: {
     nickname:'',
     token:'',
     id:'',
     },
-    isLoggedIn: false
+    isLoggedIn: false,
+    hosts: {
+        available : [],
+        unknown: [],
+        unavailable: [],
+        system: [],
+        network: []
+    },
+    problems: {
+        warning: [],
+        average: [],
+        high: [],
+        disaster: []
+    }
 }
 
 function userInfo (state= initialState, action) {
@@ -21,6 +36,16 @@ function userInfo (state= initialState, action) {
                     token:'',
                     id:'',
                 }, isLoggedIn: false
+            }
+            return nextState;
+        case 'UPDATE_HOSTS':
+            nextState= {
+                ...state, hosts: action.value
+            }
+            return nextState;
+        case 'UPDATE_PROBLEMS':
+            nextState= {
+                ...state, problems : action.value
             }
             return nextState;
         default:

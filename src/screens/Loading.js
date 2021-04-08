@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import LottieView from 'lottie-react-native'
 import { View, Text, StyleSheet } from 'react-native'
-const Loading = ({navigation}) => {
-    
-    useEffect(() => {
-        setTimeout( () => {
-            navigation.reset({
-                index: 0,
-                routes: [{ name: 'DashboardStack' }],
-            });
-        },3000)
-    })
+import { connect } from 'react-redux'
+import getHosts from '../../service/getHosts'
+import GetProblems from '../../service/GetProblems'
+
+const Loading = ({ navigation, user,dispatch }) => {
+    const [ mounted, setMounted ] = useState(true)
+    useEffect( async () => {
+        const problems = await GetProblems(user.token)
+        const hosts = await getHosts(user.token)
+        let action = {type: 'UPDATE_HOSTS', value: hosts}
+        dispatch(action)
+        const action1 = {type: 'UPDATE_PROBLEMS', value: problems}
+        dispatch(action1)
+        setTimeout( () => navigation.reset({
+            index: 0,
+            routes: [{ name: 'DashboardStack' }],
+        }),1000);
+    },[mounted])
 
     return (
         <View  style={styles.container}>
@@ -44,4 +52,8 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Loading;
+const mapStateToProps = (state) => {
+    return state;
+  }
+  
+  export default connect(mapStateToProps)(Loading);

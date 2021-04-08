@@ -5,41 +5,43 @@ import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
 import Donut from '../components/shared/Donut'
 import getHosts from '../../service/getHosts'
+import GetProblems from '../../service/GetProblems'
 import DropDown from '../components/Dropdown'
 
-const Dashboard = (props) => {
+const Dashboard = ({ hosts, problems }) => {
   const data = [{
-    percentage: 19,
+    percentage: problems.disaster.length,
     color: '#E45959',
-    max: 100
+    max: 50
   }, {
-    percentage: 14,
+    percentage: problems.high.length,
     color: '#F37353',
-    max: 100
+    max: 50
   }, {
-    percentage: 40,
+    percentage: problems.average.length,
     color: '#FFA059',
-    max: 100
+    max: 50
   }, {
-    percentage: 10,
+    percentage: problems.warning.length,
     color: '#FFC859',
-    max: 100
+    max: 50
   }]
+
+
   return (
       <View style={styles.container}>
-        
         <View style={styles.contentContainer}>
           <View style={styles.content}>
             <View style={styles.titleBox}>
               <Text style={styles.title} >System Information</Text>
             </View>
-            <Text style={{fontSize: 15,color: 'white',alignSelf: 'center', marginTop:10}} >Total Number Of Hosts : 15</Text>
+            <Text style={{fontSize: 17,color: 'white',alignSelf: 'center', marginTop:10}} >Total Number Of Hosts : {hosts.network.length + hosts.system.length} </Text>
             <View style={{marginTop: 5,justifyContent:'space-around', flexDirection: 'row'}}>
-              <HostBox color='#86CC89' number={8} status='Available'/>
-              <HostBox color='#E45959' number={5} status='Unvailable'/>
-              <HostBox color='#97AAB3' number={2} status='Uknown'/>
+              <HostBox color='#86CC89' number={hosts.available.length} status='Available'/>
+              <HostBox color='#E45959' number={hosts.unavailable.length} status='Unvailable'/>
+              <HostBox color='#97AAB3' number={hosts.unknown.length} status='Uknown'/>
             </View>
-            <Text style={{fontSize: 15,color: 'white',alignSelf: 'center', marginTop:15}} >Problems By Severity</Text>
+            <Text style={{fontSize: 17,color: 'white',alignSelf: 'center', marginTop:15}} >Problems By Severity</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center',marginTop: 5}}>
                   {data.map((p, i) => {
                     return <Donut key={i} percentage={p.percentage} color={p.color} delay={500 + 100 * i} max={p.max}/>
@@ -48,7 +50,7 @@ const Dashboard = (props) => {
           </View>
         </View>
         <View style={styles.contentContainer}>
-          <DropDown />
+          <DropDown network={hosts.network} system={hosts.system} />
         </View>
       </View>
   )
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
     textAlign:'left',
-    fontSize: 17,
+    fontSize: 19,
     marginLeft:5
   },
   titleBox: {

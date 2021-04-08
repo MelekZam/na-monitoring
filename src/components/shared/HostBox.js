@@ -5,7 +5,7 @@ const HostBox = (props) => {
     return (
         <View style={{backgroundColor: props.color, alignItems: 'center', justifyContent:'center', flex: 1, height: 100}} >
             <Text style={{color: 'white', fontSize: 16}}>{props.status}</Text>
-            <Text style={{color: 'white', fontSize: 16}}>{props.number}</Text>
+            {props.number!==null && <Text style={{color: 'white', fontSize: 16}}>{props.number}</Text>}
         </View>
     )
 }

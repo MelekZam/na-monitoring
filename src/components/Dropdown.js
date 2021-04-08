@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { List, Colors } from 'react-native-paper'
+import { View, Text } from 'react-native' 
 
-
-const DropDown = () => {
+const DropDown = ({system,network}) => {
+    console.log(system)
     const [expanded, setExpanded] = React.useState(false);
   
     const handlePress = () => setExpanded(!expanded);
@@ -10,21 +11,23 @@ const DropDown = () => {
     return (
       <List.Section >
         <List.Accordion
-          title="System Hosts"
+          title={`System Hosts  (${system.length})`}
           left={props => <List.Icon {...props} icon="server" />}
         >
-          <List.Item title="Server 1" />
-          <List.Item title="Server 2" />
+          {system.map((item) => {
+              return <List.Item onPress={ () => { }} key={item.id} title={item.name} />
+            })}
         </List.Accordion>
   
         <List.Accordion
-          title="Network Hosts"
+          title={`Network Hosts  (${network.length})`}
           left={props => <List.Icon {...props} icon="router" />}
           expanded={expanded}
           onPress={handlePress}
           >
-          <List.Item descriptionStyle={{color: 'red'}} onPress={ () => console.log('aaa')} title="Switch" />
-          <List.Item title="Router" />
+            {network.map((item) => {
+              return <List.Item onPress={ () => { }} key={item.id} title={item.name} />
+            })}
         </List.Accordion>
       </List.Section>
     );

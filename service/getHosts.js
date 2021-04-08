@@ -1,14 +1,16 @@
 import { Item } from 'react-native-paper/lib/typescript/components/List/List'
 import { zabbixURL }  from './Config'
-var hostsArray={
-    available : [],
-    unknown:[],
-    unavailable:[],
-    system:[],
-    network:[]
 
-}
+
+
 const getHosts = async (token) => {
+    let hostsArray = {
+        available : [],
+        unknown: [],
+        unavailable: [],
+        system: [],
+        network: []
+    }
     const url = new URL(zabbixURL)
     const rawResponse = await fetch(url, {
         method: 'POST',
@@ -30,47 +32,42 @@ const getHosts = async (token) => {
     })
     
     const response = await rawResponse.json()
-      
-    
-    
-    
-        response.result.forEach(item=>{
-            let host = { name: item.name, id: item.hostid }
-            if (item.interfaces[0].type == 1 ){
+        let host = {}
+        response.result.forEach( item => {
+            host = { name: item.name, id: item.hostid }
+            if (item.interfaces[0].type === '1' ){
                 hostsArray.system.push(host)
                 switch (item.available){
-                    case "0": hostsArray.unknown.push(host)
-                    case "1": hostsArray.available.push(host)
-                    case "2": hostsArray.unavailable.push(host)
+                    case "0": hostsArray.unknown.push(host);break
+                    case "1": hostsArray.available.push(host);break;
+                    case "2": hostsArray.unavailable.push(host);break;
                 }
-            } else if (item.interfaces[0].type == 2){
+            } else if (item.interfaces[0].type === '2'){
                 hostsArray.network.push(host)
                 switch (item.snmp_available){
-                    case "0": hostsArray.unknown.push(host)
-                    case "1": hostsArray.available.push(host)
-                    case "2": hostsArray.unavailable.push(host)
+                    case "0": hostsArray.unknown.push(host);break;
+                    case "1": hostsArray.available.push(host);break;
+                    case "2": hostsArray.unavailable.push(host);break;
                 }
                 
             }
-            else if (item.interfaces[0].type == 3){
+            else if (item.interfaces[0].type === '3'){
                 hostsArray.network.push(host)
                 switch (item.ipmi_available){
-                    case "0": hostsArray.unknown.push(host)
-                    case "1": hostsArray.available.push(host)
-                    case "2": hostsArray.unavailable.push(host)
+                    case "0": hostsArray.unknown.push(host);break;
+                    case "1": hostsArray.available.push(host);break;
+                    case "2": hostsArray.unavailable.push(host);break;
                 }
 
             }
-            else if(item.interfaces[0].type == 4){
+            else if(item.interfaces[0].type === '4'){
                 hostsArray.network.push(host)
                 switch (item.jmx_available){
-                case "0": hostsArray.unknown.push(host)
-                case "1": hostsArray.available.push(host)
-                case "2": hostsArray.unavailable.push(host)
+                case "0": hostsArray.unknown.push(host);break;
+                case "1": hostsArray.available.push(host);break;
+                case "2": hostsArray.unavailable.push(host);break;
             }}
         })
-    
-    console.log(hostsArray)
     return hostsArray
     
 }
