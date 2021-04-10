@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { List, Colors } from 'react-native-paper'
 import { View, Text, ScrollView } from 'react-native' 
+import { NavigationContainer } from '@react-navigation/native';
 
-const DropDown = ({system,network}) => {
-    console.log(system)
-    const [expanded, setExpanded] = React.useState(false);
-  
-    const handlePress = () => setExpanded(!expanded);
+const DropDown = ({token,system,network,navigation}) => {
+    
+  const [expanded, setExpanded] = React.useState(false);
+  const handlePress = () => setExpanded(!expanded);
   
     return (
       <ScrollView>
@@ -16,7 +16,14 @@ const DropDown = ({system,network}) => {
             left={props => <List.Icon {...props} icon="server" />}
           >
             {system.map((item) => {
-                return <List.Item onPress={ () => { }} key={item.id} title={item.name} />
+                return <List.Item key={item.id} title={item.name}
+                          onPress={ () => { navigation.navigate('Items', {
+                            name:item.name,
+                            hostID: item.id,
+                            token,
+                            }
+                          )}}
+                        />
               })}
           </List.Accordion>
     
@@ -27,7 +34,14 @@ const DropDown = ({system,network}) => {
             onPress={handlePress}
             >
               {network.map((item) => {
-                return <List.Item onPress={ () => { }} key={item.id} title={item.name} />
+                return <List.Item key={item.id} title={item.name}
+                        onPress={ () => { navigation.navigate('Items', {
+                          name: item.name,
+                          hostID: item.id,
+                          token,
+                          }
+                        )}}
+                      />
               })}
           </List.Accordion>
         </List.Section>

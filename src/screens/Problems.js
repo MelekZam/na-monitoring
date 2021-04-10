@@ -12,9 +12,10 @@ const Problems = ({ problems }) => {
       return (
         <TouchableOpacity>
           <View style={styles.problemItem}>
-            <View style={{width:75}}><HostBox color={severityColor[item.severity-1]} number={null} status={severityDesc[item.severity-1]}/></View>
+            <View style={{width:85}}><HostBox color={severityColor[parseInt(item.severity)-2]} number={null} status={severityDesc[parseInt(item.severity)-2]}/></View>
             <View style={styles.textBox}>
               <Text style={{color:'white',fontSize:15}}>{item.name}</Text>
+              <Text style={{color:'grey',fontSize:10}}>Duration : {new Date(Number(item.clock) * 1000).toISOString().substr(11, 8)}</Text>
               <Text style={{color:'grey',fontSize:10}}>Acknowledged : {item.acknowledged === '1' ? 'Yes' : 'No'}</Text>
             </View>
           </View>

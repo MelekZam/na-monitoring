@@ -9,13 +9,14 @@ import Verify from '../screens/Verify'
 import DashboardStack from '../routes/DashboardStack';
 import { connect } from 'react-redux'
 import Loading from '../screens/Loading';
+import Items from '../screens/Items'
 // import Store from '../../redux/store/ConfigureStore'
 // import userInfo from '../../redux/reducers/reducer'
 
 const Stack = createStackNavigator();
 
 const WelcomeStack = (props) => {
-  
+   
   return (
       <Stack.Navigator>
           { !props.isLoggedIn ? (<>
@@ -42,8 +43,19 @@ const WelcomeStack = (props) => {
               name='DashboardStack'
               component={DashboardStack}
               options={{
-                headerShown: false
+                headerShown: false,
               }}
+            />
+            <Stack.Screen
+              name='Items'
+              component={Items}
+              options={({ route }) => ({ title: route.params.name,headerShown: true,
+                headerTitleAlign: 'center',
+                headerTintColor: 'white',
+                headerStyle: {
+                    backgroundColor: '#16171B',
+                    shadowColor: 'transparent'
+                }, })}
             />
           </>)
           }
