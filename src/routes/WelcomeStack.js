@@ -16,7 +16,7 @@ import Items from '../screens/Items'
 const Stack = createStackNavigator();
 
 const WelcomeStack = (props) => {
-   
+   /* if user is already logged in go to loading screen => dashboard, else go to welcome screen */
   return (
       <Stack.Navigator>
           { !props.isLoggedIn ? (<>
@@ -42,6 +42,9 @@ const WelcomeStack = (props) => {
             <Stack.Screen
               name='DashboardStack'
               component={DashboardStack}
+              screenOptions={{
+                unmountOnBlur: true,
+              }}
               options={{
                 headerShown: false,
               }}

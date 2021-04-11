@@ -3,7 +3,7 @@ import { List, Colors } from 'react-native-paper'
 import { View, Text, ScrollView } from 'react-native' 
 import { NavigationContainer } from '@react-navigation/native';
 
-const DropDown = ({token,system,network,navigation}) => {
+const DropDown = ({ token, system, network, navigation }) => {
     
   const [expanded, setExpanded] = React.useState(false);
   const handlePress = () => setExpanded(!expanded);

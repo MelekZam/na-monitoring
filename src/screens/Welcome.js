@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,21 +9,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { connect } from 'react-redux'
 
 const Welcome = ({ navigation, dispatch }) => {
+    const [ loading, setLoading ] = useState(true)
     useEffect( async () => {
         try {
             const checkLogin = await AsyncStorage.getItem('isLoggedIn')
-            if (checkLogin === 'yes') {
+            if (checkLogin === 'yes') { // if user is already logged in go to dashboard
                 const x = await AsyncStorage.getItem('user')
                 const y = JSON.parse(x)
                 const action = { type: 'LOGIN', value: y }
                 dispatch(action)
-            }
+            } else setLoading(false) // else stay in welcome screen
           } catch(e) {
             console.log(e)
           }
     })
   return (
     <View style={styles.container}>
+        {!loading ? <>
         <View style={styles.logoContainer}>
             <Animatable.Image
                 source={require('../assets/logo.png')}
@@ -57,6 +59,7 @@ const Welcome = ({ navigation, dispatch }) => {
                 </View>
             </View>
         </Animatable.View>
+        </> : null}
     </View>
   )
 }

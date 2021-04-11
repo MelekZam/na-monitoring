@@ -7,13 +7,14 @@ import GetProblems from '../../service/GetProblems'
 
 const Loading = ({ navigation, user,dispatch }) => {
     const [ mounted, setMounted ] = useState(true)
+
+    // fetch for the first time when we are in loading screen
     useEffect( async () => {
         const problems = await GetProblems(user.token)
         const hosts = await getHosts(user.token)
-        let action = {type: 'UPDATE_HOSTS', value: hosts}
+        //update redux store with new data
+        let action = {type: 'UPDATE', value: { hosts, problems }}
         dispatch(action)
-        const action1 = {type: 'UPDATE_PROBLEMS', value: problems}
-        dispatch(action1)
         setTimeout( () => navigation.reset({
             index: 0,
             routes: [{ name: 'DashboardStack' }],
@@ -28,7 +29,7 @@ const Loading = ({ navigation, user,dispatch }) => {
                 </View>
             </View>
             <View style={{flex:1}}>
-                <Text style={styles.text}>Fetching Data From Zabbix</Text>
+                <Text style={styles.text}>Fetching Data From Zabbix . . .</Text>
             </View>
         </View>
     )

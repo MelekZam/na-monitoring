@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet,Button,ScrollView } from 'react-native'
-import { color } from 'react-native-reanimated'
 import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
 import Donut from '../components/shared/Donut'
@@ -8,7 +7,24 @@ import getHosts from '../../service/getHosts'
 import GetProblems from '../../service/GetProblems'
 import DropDown from '../components/Dropdown'
 
-const Dashboard = ({ hosts, problems }) => {
+
+
+const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
+  const [ mounted, setMounted ] = useState(true)
+  
+  useEffect( () => {
+    // fetch data every 30s 
+    const interval = setInterval( async () => {
+      const problems = await GetProblems(user.token)
+      const hosts = await getHosts(user.token)
+      // updata redux store with new data
+      let action = {type: 'UPDATE', value: { hosts, problems }}
+      dispatch(action)
+    }, 30000 )
+    return () => clearInterval(interval) // clear fetch loop when logging out
+  }, [mounted])
+
+  // data for donut graphs (problems)
   const data = [{
     percentage: problems.disaster.length,
     color: '#E45959',
@@ -51,7 +67,7 @@ const Dashboard = ({ hosts, problems }) => {
           </View>
         </View>
         <View style={styles.contentContainer}>
-          <DropDown network={hosts.network} system={hosts.system} />
+          <DropDown token={user.token} navigation={navigation} network={hosts.network} system={hosts.system} />
         </View>
       </ScrollView>
       </View>

@@ -38,16 +38,16 @@ function userInfo (state= initialState, action) {
                 }, isLoggedIn: false
             }
             return nextState;
-        case 'UPDATE_HOSTS':
+        case 'UPDATE':
             nextState= {
-                ...state, hosts: action.value
+                ...state, hosts: action.value.hosts, problems: action.value.problems
             }
             return nextState;
-        case 'UPDATE_PROBLEMS':
-            nextState= {
-                ...state, problems : action.value
-            }
-            return nextState;
+        // case 'UPDATE_PROBLEMS':
+        //     nextState= {
+        //         ...state, problems : action.value
+        //     }
+        //     return nextState;
         default:
             return state;
     }
