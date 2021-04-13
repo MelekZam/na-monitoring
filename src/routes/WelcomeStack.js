@@ -10,8 +10,7 @@ import DashboardStack from '../routes/DashboardStack';
 import { connect } from 'react-redux'
 import Loading from '../screens/Loading';
 import Items from '../screens/Items'
-// import Store from '../../redux/store/ConfigureStore'
-// import userInfo from '../../redux/reducers/reducer'
+import Acknowledge from '../screens/Acknowledge'
 
 const Stack = createStackNavigator();
 
@@ -53,6 +52,17 @@ const WelcomeStack = (props) => {
               name='Items'
               component={Items}
               options={({ route }) => ({ title: route.params.name,headerShown: true,
+                headerTitleAlign: 'center',
+                headerTintColor: 'white',
+                headerStyle: {
+                    backgroundColor: '#16171B',
+                    shadowColor: 'transparent'
+                }, })}
+            />
+            <Stack.Screen
+              name='Acknowledge'
+              component={Acknowledge}
+              options={() => ({ headerShown: true,
                 headerTitleAlign: 'center',
                 headerTintColor: 'white',
                 headerStyle: {

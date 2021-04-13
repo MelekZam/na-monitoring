@@ -1,3 +1,37 @@
+diff --git a/node_modules/react-native-paper/src/components/Button.tsx b/node_modules/react-native-paper/src/components/Button.tsx
+index 5cf7100..91a0561 100644
+--- a/node_modules/react-native-paper/src/components/Button.tsx
++++ b/node_modules/react-native-paper/src/components/Button.tsx
+@@ -192,10 +192,7 @@ const Button = ({
+   }
+ 
+   if (mode === 'outlined') {
+-    borderColor = color(theme.dark ? white : black)
+-      .alpha(0.29)
+-      .rgb()
+-      .string();
++    borderColor = 'white'
+     borderWidth = StyleSheet.hairlineWidth;
+   } else {
+     borderColor = 'transparent';
+diff --git a/node_modules/react-native-paper/src/components/Checkbox/CheckboxAndroid.tsx b/node_modules/react-native-paper/src/components/Checkbox/CheckboxAndroid.tsx
+index bfd2212..53f525e 100644
+--- a/node_modules/react-native-paper/src/components/Checkbox/CheckboxAndroid.tsx
++++ b/node_modules/react-native-paper/src/components/Checkbox/CheckboxAndroid.tsx
+@@ -101,12 +101,7 @@ const CheckboxAndroid = ({
+   const checked = status === 'checked';
+   const indeterminate = status === 'indeterminate';
+   const checkedColor = rest.color || theme.colors.accent;
+-  const uncheckedColor =
+-    rest.uncheckedColor ||
+-    color(theme.colors.text)
+-      .alpha(theme.dark ? 0.7 : 0.54)
+-      .rgb()
+-      .string();
++  const uncheckedColor = 'white'
+ 
+   let rippleColor, checkboxColor;
+ 
 diff --git a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
 index 38d380b..b465de6 100644
 --- a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx

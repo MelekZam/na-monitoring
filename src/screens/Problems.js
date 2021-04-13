@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native'
+import { Provider, Modal, Portal } from 'react-native-paper'
 import GetProblems from '../../service/GetProblems'
 import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
 
 
-const Problems = ({ problems }) => {
+const Problems = ({ problems, navigation }) => {
     const [ severityDesc, setSeverityDesc ] = useState(['Warning','Average','High','Disaster'])
     const [ severityColor, setSeverityColor ] = useState(['#FFC859','#FFA059','#F37353','#E45959'])
+    const [ popUP, setPopUP ] = useState(false)
     const renderItem = (item) => {
       return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={ () => navigation.navigate('Acknowledge', { id: item.eventid})}>
           <View style={styles.problemItem}>
             <View style={{width:85}}><HostBox color={severityColor[parseInt(item.severity)-2]} number={null} status={severityDesc[parseInt(item.severity)-2]}/></View>
             <View style={styles.textBox}>
@@ -23,6 +25,7 @@ const Problems = ({ problems }) => {
       )
     } 
     return (
+      <Provider>
         <View style={styles.container}>
           <FlatList 
             data={problems.all}
@@ -30,6 +33,7 @@ const Problems = ({ problems }) => {
             renderItem={ ({item}) => renderItem(item)}
           />
         </View>
+      </Provider>
     )
 }
 const styles = StyleSheet.create({
@@ -56,6 +60,10 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       justifyContent:'space-around',
       flexShrink: 1
+    },
+    popupContainer: {
+      marginHorizontal: 10,
+      marginVertical:50
     }
   })
 

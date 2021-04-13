@@ -107,12 +107,14 @@ const LogIn = ({navigation,dispatch}) => {
                         <TextInput
                             value={username}
                             placeholder={'Username'}
+                            placeholderTextColor='lightgrey'
                             style={styles.input}
                             onChangeText = { (text) => setUsername(text) }
                         />
                         <TextInput
                             value={password}
                             placeholder={'Password'}
+                            placeholderTextColor='lightgrey'
                             secureTextEntry={true}
                             style={styles.input}
                             onChangeText = { (text) => setPassword(text) }
@@ -162,6 +164,7 @@ const styles = StyleSheet.create({
         fontWeight: '200'
     },
     input: {
+        color: 'black',
         width: 200,
         height: 44,
         padding: 10,

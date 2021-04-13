@@ -12,17 +12,18 @@ import DropDown from '../components/Dropdown'
 const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
   const [ mounted, setMounted ] = useState(true)
   
-  useEffect( () => {
-    // fetch data every 30s 
-    const interval = setInterval( async () => {
-      const problems = await GetProblems(user.token)
-      const hosts = await getHosts(user.token)
-      // updata redux store with new data
-      let action = {type: 'UPDATE', value: { hosts, problems }}
-      dispatch(action)
-    }, 30000 )
-    return () => clearInterval(interval) // clear fetch loop when logging out
-  }, [mounted])
+  // useEffect( () => {
+  //   // fetch data every 30s 
+  //   const interval = setInterval( async () => {
+  //     const problems = await GetProblems(user.token)
+  //     const hosts = await getHosts(user.token)
+  //     // updata redux store with new data
+  //     let action = {type: 'UPDATE', value: { hosts, problems }}
+  //     console.log(action.value)
+  //     dispatch(action)
+  //   }, 30000 )
+  //   return () => clearInterval(interval) // clear fetch loop when logging out
+  // }, [mounted])
 
   // data for donut graphs (problems)
   const data = [{
