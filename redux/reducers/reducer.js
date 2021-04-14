@@ -43,11 +43,11 @@ function userInfo (state= initialState, action) {
                 ...state, hosts: action.value.hosts, problems: action.value.problems
             }
             return nextState;
-        // case 'UPDATE_PROBLEMS':
-        //     nextState= {
-        //         ...state, problems : action.value
-        //     }
-        //     return nextState;
+        case 'UPDATE_PROBLEMS':
+            nextState= {
+                ...state, problems : action.value
+            }
+            return nextState;
         default:
             return state;
     }
