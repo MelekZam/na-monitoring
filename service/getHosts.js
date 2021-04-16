@@ -35,6 +35,11 @@ const getHosts = async (token) => {
         let host = {}
         response.result.forEach( item => {
             host = { name: item.name, id: item.hostid }
+            if (item.interfaces[0] === undefined) {
+                hostsArray.system.push(host);
+                hostsArray.unknown.push(host);
+                return;
+            }
             if (item.interfaces[0].type === '1' ){
                 hostsArray.system.push(host)
                 switch (item.available){

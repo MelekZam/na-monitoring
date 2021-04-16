@@ -6,17 +6,17 @@ import HostBox from '../components/shared/HostBox'
 
 
 const Problems = ({ user, problems, navigation }) => {
-    const [ severityDesc, setSeverityDesc ] = useState(['Warning','Average','High','Disaster'])
-    const [ severityColor, setSeverityColor ] = useState(['#FFC859','#FFA059','#F37353','#E45959'])
+    const [ severityDesc, setSeverityDesc ] = useState(['Not Classified','Information','Warning','Average','High','Disaster'])
+    const [ severityColor, setSeverityColor ] = useState(['#97AAB3','#7499FF','#FFC859','#FFA059','#F37353','#E45959'])
     const [ popUP, setPopUP ] = useState(false)
     const renderItem = (item) => {
       return (
         <TouchableOpacity onPress={ () => navigation.navigate('Acknowledge', { token: user.token, id: item.eventid, name: item.name, history: item.acknowledges})}>
           <View style={styles.problemItem}>
-            <View style={{width:85}}><HostBox color={severityColor[parseInt(item.severity)-2]} number={null} status={severityDesc[parseInt(item.severity)-2]}/></View>
+            <View style={{width:90}}><HostBox color={severityColor[parseInt(item.severity)]} number={null} status={severityDesc[parseInt(item.severity)]}/></View>
             <View style={styles.textBox}>
               <Text style={{color:'white',fontSize:15}}>{item.name}</Text>
-              <Text style={{color:'grey',fontSize:10}}>Duration : {new Date(Number(item.clock) * 1000).toISOString().substr(11, 8)}</Text>
+              <Text style={{color:'grey',fontSize:10}}>Time :  {new Date(item.clock * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
               <Text style={{color:'grey',fontSize:10}}>Acknowledged : {item.acknowledged === '1' ? 'Yes' : 'No'}</Text>
             </View>
           </View>

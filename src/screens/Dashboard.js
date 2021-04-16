@@ -6,40 +6,96 @@ import Donut from '../components/shared/Donut'
 import getHosts from '../../service/getHosts'
 import GetProblems from '../../service/GetProblems'
 import DropDown from '../components/Dropdown'
+//import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import PushNotification from "react-native-push-notification";
 
+PushNotification.createChannel(
+  {
+    channelId: "channel-id", // (required)
+    channelName: "My channel", // (required)
+    channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+    playSound: false, // (optional) default: true
+    soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+    importance: 4, // (optional) default: 4. Int value of the Android notification importance
+    vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+  },
+  (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+);
+PushNotification.configure({
+  onRegister: function (token) {
+    console.log("TOKEN:", token);
+  },
 
+  onNotification: function (notification) {
+    console.log("NOTIFICATION:", notification);
+    notification.finish(PushNotificationIOS.FetchResult.NoData);
+  },
+
+  popInitialNotification: true,
+  requestPermissions: Platform.OS === 'ios',
+});
 
 const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
-  const [ mounted, setMounted ] = useState(true)
   
-  // useEffect( () => {
-  //   // fetch data every 30s 
-  //   const interval = setInterval( async () => {
-  //     const problems = await GetProblems(user.token)
-  //     const hosts = await getHosts(user.token)
-  //     // updata redux store with new data
-  //     let action = {type: 'UPDATE', value: { hosts, problems }}
-  //     console.log(action.value)
-  //     dispatch(action)
-  //   }, 30000 )
-  //   return () => clearInterval(interval) // clear fetch loop when logging out
-  // }, [mounted])
+  const [ mounted, setMounted ] = useState(true)
+  const { all, disaster, high, average, warning } = problems
+  
+  const checkNewProblems = ( newArray ) => {
+    let res= 0
+    const l= all.length
+    const s= newArray.length
+    console.log('old length is : ', l)
+    for ( var i = 0; i < s; i++ ) {
+      let temp= 0
+      for ( var j = 0; j < l; j++ ) {
+        if ( all[j].name !== newArray[i].name || all[j].eventid !== newArray[i].eventid ) temp++
+      }
+      if ( temp === l )
+        res++
+    }
+    return res;
+  }
+
+  useEffect( () => {
+    // fetch data every 30s 
+    const interval = setTimeout( async () => {
+      try {
+        const problems = await GetProblems(user.token)
+        const hosts = await getHosts(user.token)
+        // check if there are any new problems
+        let newProeblems= checkNewProblems( problems.all )
+        if (newProeblems) PushNotification.localNotification({
+          channelId: "channel-id",
+          title: "ALERT",
+          message: newProeblems>1 ? `${newProeblems} new problems have been detected` : '1 new problem has been detected',
+        });
+        // update redux store with new data
+        let action = {type: 'UPDATE', value: { hosts, problems }}
+        console.log(action.value)
+        dispatch(action)
+    } catch(e) {
+        console.log('error')
+        setMounted(!mounted)
+    }
+    }, 10000 )
+    return () => clearTimeout(interval) // clear fetch loop when logging out
+  }, [problems,mounted])
 
   // data for donut graphs (problems)
   const data = [{
-    percentage: problems.disaster.length,
+    percentage: disaster.length,
     color: '#E45959',
     max: 50
   }, {
-    percentage: problems.high.length,
+    percentage: high.length,
     color: '#F37353',
     max: 50
   }, {
-    percentage: problems.average.length,
+    percentage: average.length,
     color: '#FFA059',
     max: 50
   }, {
-    percentage: problems.warning.length,
+    percentage: warning.length,
     color: '#FFC859',
     max: 50
   }]

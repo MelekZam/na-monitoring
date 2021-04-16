@@ -14,6 +14,7 @@ const initialState = {user: {
         network: []
     },
     problems: {
+        all: [],
         warning: [],
         average: [],
         high: [],
