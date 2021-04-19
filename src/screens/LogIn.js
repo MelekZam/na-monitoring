@@ -40,7 +40,7 @@ const LogIn = ({navigation,dispatch}) => {
             } else { // else go to verification screen
                 const phoneNumber = await getUserMedia(result.userid,result.sessionid)
                 console.log(result.sessionid)
-                await axios.get(`http://192.168.1.15:3000/login?phonenumber=216${phoneNumber}&channel=sms`) // send request to localhost node server to send sms to the user's phone using twilio services
+                await axios.get(`http://172.29.26.94:3000/login?phonenumber=216${phoneNumber}&channel=sms`) // send request to localhost node server to send sms to the user's phone using twilio services
                 navigation.navigate('Verify', {
                     phoneNumber,
                     token: result.sessionid,

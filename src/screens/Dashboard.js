@@ -71,13 +71,13 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
         });
         // update redux store with new data
         let action = {type: 'UPDATE', value: { hosts, problems }}
-        console.log(action.value)
+        console.log(action.value.hosts.system)
         dispatch(action)
     } catch(e) {
         console.log('error')
         setMounted(!mounted)
     }
-    }, 10000 )
+    }, 30000 )
     return () => clearTimeout(interval) // clear fetch loop when logging out
   }, [problems,mounted])
 

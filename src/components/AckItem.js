@@ -10,9 +10,11 @@ const AckItem = ({ item }) => {
             <View style={styles.textBox}>
                 <Text style={{color:'white'}}>Date : {new Date(item.item.clock * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
                 <Text style={{color:'white'}}>User ID : {item.item.userid}</Text>
-                <Text style={{color:'white'}}>Message : {item.item.message}</Text>
-                <Text style={{color: color[parseInt(item.item.old_severity)]}}><Text style={{color:'white'}}>Old Severity : </Text>{severity[parseInt(item.item.old_severity)]}</Text>
-                <Text style={{color: color[parseInt(item.item.new_severity)]}}><Text style={{color:'white'}}>New Severity : </Text>{severity[parseInt(item.item.new_severity)]}</Text> 
+                <Text style={{color:'white'}}>Message : <Text style={{color:'lightgrey',fontSize:12,fontStyle:'italic'}}>{item.item.message}</Text></Text>
+                {((item.item.action>=8 && item.item.action<16) || item.item.action>=24) ? <><Text style={{color: color[parseInt(item.item.old_severity)]}}><Text style={{color:'white'}}>Old Severity : </Text>{severity[parseInt(item.item.old_severity)]}</Text>
+                <Text style={{color: color[parseInt(item.item.new_severity)]}}><Text style={{color:'white'}}>New Severity : </Text>{severity[parseInt(item.item.new_severity)]}</Text></> : <Text style={{color:'white'}}>Severity Unchanged</Text>}
+                <Text style={{color:'white'}}>Closed Problem : { item.item.action%2 ? 'Yes' : 'No'}</Text>
+                <Text style={{color:'white'}}>Unacknowledged : { item.item.action>=16 ? 'Yes' : 'No'}</Text>
             </View>
           </View>
       )

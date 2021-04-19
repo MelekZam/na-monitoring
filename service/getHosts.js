@@ -22,9 +22,7 @@ const getHosts = async (token) => {
             "method": "host.get",
             "params": {
                 "selectInterfaces":["type"],
-                "output": ["hostid","available", "name", "snmp_available","jmx_available","ipmi_available"]
-                
-                
+                "output": ["hostid","available", "name", "snmp_available","jmx_available","ipmi_available"]                
             },
             "auth": token,
             "id":1,                                                                                                                                                                                                                                                       

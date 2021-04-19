@@ -84,6 +84,7 @@ const Acknowledge = ({ route, dispatch, navigation }) => {
                 <Text style={{marginTop:20,marginBottom:10,color:'white',fontSize:17,textAlign:'left'}}>History</Text>
                 <SafeAreaView style={{marginVertical:10,flexDirection:'row',justifyContent:'space-between'}}>
                     <FlatList
+                        inverted={true}
                         data={history}
                         keyExtractor = { item => item.acknowledgeid }
                         renderItem = {item => <AckItem item={item} />}

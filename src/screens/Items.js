@@ -20,7 +20,6 @@ const Items = ({route}) => {
     const renderItem = (item) => {
         return (
           <TouchableOpacity>
-            { searchText==='' || item.name.toLowerCase().includes(searchText.toLowerCase()) ? 
             <View style={styles.item}>
               <View style={{width:75}}><HostBox color={ item.status == '0' ? '#86CC89' : '#E45959' } number={null} status={ item.status == '0' ? 'Enabled' : 'Disabled' }/></View>
               <View style={styles.textBox}>
@@ -29,7 +28,6 @@ const Items = ({route}) => {
                 <Text style={{color:'grey',fontSize:10}} numberOfLines={1}>Last Value : {item.lastvalue}</Text>
               </View>
             </View>
-            : null}
           </TouchableOpacity>
         )
     }
@@ -46,7 +44,7 @@ const Items = ({route}) => {
             onChangeText = { (text) => setSearchText(text) }
           />
           <FlatList 
-            data={items}
+            data={ searchText!='' ? items.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase())) : items}
             keyExtractor={item => item.key_}
             renderItem={ ({item}) => renderItem(item)}
           />

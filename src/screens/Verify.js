@@ -35,7 +35,7 @@ const Verify = ({navigation, route,dispatch}) => {
     
     //submit code
     const submitCode = async (code) => {
-        const response = await axios.get(`http://192.168.1.15:3000/verify?phonenumber=216${route.params.phoneNumber}&code=${code}`) // send request to localhost node server to verify the code using twilio service
+        const response = await axios.get(`http://172.29.26.94:3000/verify?phonenumber=216${route.params.phoneNumber}&code=${code}`) // send request to localhost node server to verify the code using twilio service
         if (response.data.valid){ // if the user's input is correct ==> verify the device and login
             const user = {
                 nickname: route.params.nickname,
@@ -59,7 +59,7 @@ const Verify = ({navigation, route,dispatch}) => {
     // resend code
     const resendOTP = async () => {
         setResendButtonDisabledTime(30);
-        await axios.get(`http://192.168.1.15:3000/login?phonenumber=216${route.params.phoneNumber}&channel=sms`)
+        await axios.get(`http://172.29.26.94:3000/login?phonenumber=216${route.params.phoneNumber}&channel=sms`)
     }
     
     return (
