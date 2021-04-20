@@ -5,11 +5,11 @@ import { View, Text, StyleSheet } from 'react-native'
 const severity = ['Not Classified','Information','Warning','Average','High','Disaster']
 const color = ['#97AAB3','#7499FF','#FFC859','#FFA059','#F37353','#E45959']
 
-const AckItem = ({ item }) => {
+const AckItem = ({ item, users }) => {
       return (<View style={styles.ackItem}>
             <View style={styles.textBox}>
                 <Text style={{color:'white'}}>Date : {new Date(item.item.clock * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
-                <Text style={{color:'white'}}>User ID : {item.item.userid}</Text>
+                <Text style={{color:'white'}}>User : {users.filter(value => value.id === item.item.id)[0].surname}</Text>
                 <Text style={{color:'white'}}>Message : <Text style={{color:'lightgrey',fontSize:12,fontStyle:'italic'}}>{item.item.message}</Text></Text>
                 {((item.item.action>=8 && item.item.action<16) || item.item.action>=24) ? <><Text style={{color: color[parseInt(item.item.old_severity)]}}><Text style={{color:'white'}}>Old Severity : </Text>{severity[parseInt(item.item.old_severity)]}</Text>
                 <Text style={{color: color[parseInt(item.item.new_severity)]}}><Text style={{color:'white'}}>New Severity : </Text>{severity[parseInt(item.item.new_severity)]}</Text></> : <Text style={{color:'white'}}>Severity Unchanged</Text>}

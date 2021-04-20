@@ -35,7 +35,7 @@ PushNotification.configure({
   requestPermissions: Platform.OS === 'ios',
 });
 
-const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
+const Dashboard = ({ user, navigation, hosts, problems, dispatch, listOfUsers }) => {
   
   const [ mounted, setMounted ] = useState(true)
   const { all, disaster, high, average, warning } = problems
@@ -44,7 +44,6 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
     let res= 0
     const l= all.length
     const s= newArray.length
-    console.log('old length is : ', l)
     for ( var i = 0; i < s; i++ ) {
       let temp= 0
       for ( var j = 0; j < l; j++ ) {
@@ -63,11 +62,12 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
         const problems = await GetProblems(user.token)
         const hosts = await getHosts(user.token)
         // check if there are any new problems
-        let newProeblems= checkNewProblems( problems.all )
-        if (newProeblems) PushNotification.localNotification({
+        let newProblems= checkNewProblems( problems.all )
+        newProblems= 3
+        if (newProblems) PushNotification.localNotification({
           channelId: "channel-id",
           title: "ALERT",
-          message: newProeblems>1 ? `${newProeblems} new problems have been detected` : '1 new problem has been detected',
+          message: newProblems>1 ? `${newProblems} new problems have been detected` : '1 new problem has been detected',
         });
         // update redux store with new data
         let action = {type: 'UPDATE', value: { hosts, problems }}
@@ -77,7 +77,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
         console.log('error')
         setMounted(!mounted)
     }
-    }, 30000 )
+    }, 60000 )
     return () => clearTimeout(interval) // clear fetch loop when logging out
   }, [problems,mounted])
 

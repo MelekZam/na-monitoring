@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import getHosts from '../../service/getHosts'
 import GetProblems from '../../service/GetProblems'
+import GetUsers from '../../service/GetUsers'
 
 const Loading = ({ navigation, user,dispatch }) => {
     const [ mounted, setMounted ] = useState(true)
@@ -12,13 +13,16 @@ const Loading = ({ navigation, user,dispatch }) => {
     useEffect( async () => {
         const problems = await GetProblems(user.token)
         const hosts = await getHosts(user.token)
+        const users = await GetUsers(user.token)
         //update redux store with new data
         let action = {type: 'UPDATE', value: { hosts, problems }}
         dispatch(action)
-        setTimeout( () => navigation.reset({
+        const action1= { type: 'ADD_USERS', value: users }
+        dispatch(action1)
+        navigation.reset({
             index: 0,
             routes: [{ name: 'DashboardStack' }],
-        }),1000);
+        })
     },[mounted])
 
     return (

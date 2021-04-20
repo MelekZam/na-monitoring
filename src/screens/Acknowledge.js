@@ -6,7 +6,7 @@ import GetProblems from '../../service/GetProblems'
 import { connect } from 'react-redux'
 import AckItem from '../../src/components/AckItem'
 
-const Acknowledge = ({ route, dispatch, navigation }) => {
+const Acknowledge = ({ route, dispatch, navigation, listOfUsers }) => {
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     }, [])
@@ -81,13 +81,13 @@ const Acknowledge = ({ route, dispatch, navigation }) => {
                         onPress={ () =>  setClosed(!closed) } />
                 </View>
                 { ( message !== '' || severity >= 0 || closed || acknowledged ) && <View style={{flex:1}}><Button color='#86CC89' mode='contained' onPress={request} >Update</Button></View>}
-                <Text style={{marginTop:20,marginBottom:10,color:'white',fontSize:17,textAlign:'left'}}>History</Text>
+                <Text style={{marginTop:20,marginBottom:10,color:'white',fontSize:17,textAlign:'left'}}>History <Text style={{fontSize:15}}>{`(${history.length})`}</Text></Text>
                 <SafeAreaView style={{marginVertical:10,flexDirection:'row',justifyContent:'space-between'}}>
                     <FlatList
                         inverted={true}
                         data={history}
                         keyExtractor = { item => item.acknowledgeid }
-                        renderItem = {item => <AckItem item={item} />}
+                        renderItem = {item => <AckItem users={listOfUsers} item={item} />}
                     />
                 </SafeAreaView>
             </View>

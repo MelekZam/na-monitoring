@@ -19,7 +19,8 @@ const initialState = {user: {
         average: [],
         high: [],
         disaster: []
-    }
+    },
+    listOfUsers: []
 }
 
 function userInfo (state= initialState, action) {
@@ -47,6 +48,11 @@ function userInfo (state= initialState, action) {
         case 'UPDATE_PROBLEMS':
             nextState= {
                 ...state, problems : action.value
+            }
+            return nextState;
+        case 'ADD_USERS':
+            nextState= {
+                ...state, listOfUsers: action.value
             }
             return nextState;
         default:
