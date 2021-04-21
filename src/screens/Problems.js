@@ -15,7 +15,8 @@ const Problems = ({ user, problems, navigation }) => {
           <View style={styles.problemItem}>
             <View style={{width:90}}><HostBox color={severityColor[parseInt(item.severity)]} number={null} status={severityDesc[parseInt(item.severity)]}/></View>
             <View style={styles.textBox}>
-              <Text style={{color:'white',fontSize:15}}>{item.name}</Text>
+              <Text style={{color:'white',fontSize:14,fontWeight:'bold'}}>{item.name}</Text>
+              <Text style={{color:'white',fontSize:11.5}}>Host : {item.host.name}</Text>
               <Text style={{color:'grey',fontSize:10}}>Time :  {new Date(item.clock * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
               <Text style={{color:'grey',fontSize:10}}>Acknowledged : {item.acknowledged === '1' ? 'Yes' : 'No'}</Text>
             </View>

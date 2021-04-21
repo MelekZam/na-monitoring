@@ -11,8 +11,8 @@ const Loading = ({ navigation, user,dispatch }) => {
 
     // fetch for the first time when we are in loading screen
     useEffect( async () => {
-        const problems = await GetProblems(user.token)
         const hosts = await getHosts(user.token)
+        const problems = await GetProblems(user.token, [...hosts.network,...hosts.system])
         const users = await GetUsers(user.token)
         //update redux store with new data
         let action = {type: 'UPDATE', value: { hosts, problems }}

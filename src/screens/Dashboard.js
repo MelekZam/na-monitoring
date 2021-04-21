@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet,Button,ScrollView } from 'react-native'
+import { View, Text, StyleSheet,ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
 import Donut from '../components/shared/Donut'
@@ -35,7 +35,7 @@ PushNotification.configure({
   requestPermissions: Platform.OS === 'ios',
 });
 
-const Dashboard = ({ user, navigation, hosts, problems, dispatch, listOfUsers }) => {
+const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
   
   const [ mounted, setMounted ] = useState(true)
   const { all, disaster, high, average, warning } = problems
@@ -59,11 +59,10 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, listOfUsers })
     // fetch data every 30s 
     const interval = setTimeout( async () => {
       try {
-        const problems = await GetProblems(user.token)
         const hosts = await getHosts(user.token)
+        const problems = await GetProblems(user.token, [...hosts.network,...hosts.system])
         // check if there are any new problems
         let newProblems= checkNewProblems( problems.all )
-        newProblems= 3
         if (newProblems) PushNotification.localNotification({
           channelId: "channel-id",
           title: "ALERT",
@@ -120,11 +119,11 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, listOfUsers })
                   {data.map((p, i) => {
                     return <Donut key={i} percentage={p.percentage} color={p.color} delay={500 + 100 * i} max={p.max}/>
                   })}
-            </View>  
+            </View>
           </View>
         </View>
         <View style={styles.contentContainer}>
-          <DropDown token={user.token} navigation={navigation} network={hosts.network} system={hosts.system} />
+          <DropDown problems={problems} token={user.token} navigation={navigation} network={hosts.network} system={hosts.system} />
         </View>
       </ScrollView>
       </View>
