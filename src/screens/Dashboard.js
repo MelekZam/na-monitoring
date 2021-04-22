@@ -6,7 +6,7 @@ import Donut from '../components/shared/Donut'
 import getHosts from '../../service/getHosts'
 import GetProblems from '../../service/GetProblems'
 import DropDown from '../components/Dropdown'
-//import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
 
 PushNotification.createChannel(
@@ -21,6 +21,9 @@ PushNotification.createChannel(
   },
   (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
 );
+let goToProblems = () => {
+
+}
 PushNotification.configure({
   onRegister: function (token) {
     console.log("TOKEN:", token);
@@ -28,6 +31,7 @@ PushNotification.configure({
 
   onNotification: function (notification) {
     console.log("NOTIFICATION:", notification);
+    goToProblems()
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   },
 
@@ -37,6 +41,10 @@ PushNotification.configure({
 
 const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
   
+  goToProblems = () => {
+    navigation.navigate('Problems')
+  }
+
   const [ mounted, setMounted ] = useState(true)
   const { all, disaster, high, average, warning } = problems
   
