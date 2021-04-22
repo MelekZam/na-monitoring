@@ -59,83 +59,68 @@ const LogIn = ({navigation,dispatch}) => {
     }
 
     return (
-        <View style={{flex: 1}}>
+        
+        <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
             <AwesomeAlert
-                    show={showAlert}
-                    showProgress={false}
-                    title="Error"
-                    message="Invalid login credentials !"
-                    closeOnTouchOutside={true}
-                    showCancelButton={false}
-                    showConfirmButton={true}
-                    confirmText="Okay!"
-                    confirmButtonColor="#DD6B55"
-                    overlayStyle={{height:'100%'}}
-                    contentContainerStyle={{width: 220 ,height:250,justifyContent: 'center'}}
-                    onConfirmPressed={() => {
-                        hideAlert();
-                    }}
+                show={showAlert}
+                showProgress={false}
+                title="Error"
+                message="Invalid login credentials !"
+                closeOnTouchOutside={true}
+                showCancelButton={false}
+                showConfirmButton={true}
+                confirmText="Okay!"
+                confirmButtonColor="#DD6B55"
+                overlayStyle={{height:'100%'}}
+                contentContainerStyle={{width: 220 ,height:250,justifyContent: 'center'}}
+                onConfirmPressed={() => {
+                    hideAlert();
+                }}
+            />
+            <View style={styles.logoContainer}>
+                <Animatable.Image
+                        source={require('../assets/unDraw.png')}
+                        animation='zoomInDown'
+                        style={styles.logo}
+                        duration={1500}
                 />
-            <View enabled={true} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
-                <View style={styles.logoContainer}>
-                    <TouchableOpacity 
-                        style={{alignSelf: 'flex-start', marginLeft: 10, width: 20}}
-                        onPress={() => navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'Welcome' }],
-                        })}
-                    >
-                        <Icon
-                            name='angle-left'
-                            size={40}
-                            color='white'
-                        />
-                    </TouchableOpacity>
-                    <Animatable.Image
-                            source={require('../assets/unDraw.png')}
-                            animation='zoomInDown'
-                            style={styles.logo}
-                            duration={1000}
+            </View>
+            <Animatable.View animation="fadeInUpBig" style={styles.logInContainer}>
+                <View style={styles.textBox}>
+                    <Text style={styles.headerTxt}>Log In</Text>
+                    <Text style={styles.p}>Please sign in to continue.</Text>
+                </View>
+                <View style={styles.formContainer}>
+                    <TextInput
+                        value={username}
+                        placeholder={'Username'}
+                        placeholderTextColor='lightgrey'
+                        style={styles.input}
+                        onChangeText = { (text) => setUsername(text) }
+                    />
+                    <TextInput
+                        value={password}
+                        placeholder={'Password'}
+                        placeholderTextColor='lightgrey'
+                        secureTextEntry={true}
+                        style={styles.input}
+                        onChangeText = { (text) => setPassword(text) }
+                    />
+                    <Button
+                        title={'Login'}
+                        style={styles.input}
+                        onPress={onPress}
                     />
                 </View>
-                <Animatable.View animation="fadeInUpBig" style={styles.logInContainer}>
-                    <View style={styles.textBox}>
-                        <Text style={styles.headerTxt}>Log In</Text>
-                        <Text style={styles.p}>Please sign in to continue.</Text>
-                    </View>
-                    <View style={styles.formContainer}>
-                        <TextInput
-                            value={username}
-                            placeholder={'Username'}
-                            placeholderTextColor='lightgrey'
-                            style={styles.input}
-                            onChangeText = { (text) => setUsername(text) }
-                        />
-                        <TextInput
-                            value={password}
-                            placeholder={'Password'}
-                            placeholderTextColor='lightgrey'
-                            secureTextEntry={true}
-                            style={styles.input}
-                            onChangeText = { (text) => setPassword(text) }
-                        />
-                        
-                        <Button
-                            title={'Login'}
-                            style={styles.input}
-                            onPress={onPress}
-                        />
-                    </View>
-                </Animatable.View>
-            </View>
-        </View>
+            </Animatable.View>
+        </ScrollView>      
   )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#16171B'
+        backgroundColor: '#16171B',
     },
     logoContainer: {
         flex: 1.5,
@@ -143,10 +128,11 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     logInContainer: {
-        flex:3,
         margin: '5%',
         padding : 5,
+        height: 400,
         alignItems: 'center',
+        justifyContent:'flex-start'
     },
     logo:{
         height:175,
@@ -180,6 +166,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 3,
+        zIndex: 10
       },
       textBox: {
           flex: 1,

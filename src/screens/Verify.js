@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Button } from 'react-native'
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 import OTPInputView from '@twotalltotems/react-native-otp-input'
@@ -61,24 +61,10 @@ const Verify = ({navigation, route,dispatch}) => {
         setResendButtonDisabledTime(30);
         await axios.get(`http://172.29.26.94:3000/login?phonenumber=216${route.params.phoneNumber}&channel=sms`)
     }
-    
     return (
         <View style={{flex: 1}}>
-            <View enabled={true} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
+            <View style={styles.container}>
                 <View style={styles.logoContainer}>
-                    <TouchableOpacity 
-                        style={{alignSelf: 'flex-start', marginLeft: 10, width: 20}}
-                        onPress={() => navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'Welcome' }],
-                        })}
-                    >
-                        <Icon
-                            name='angle-left'
-                            size={40}
-                            color='white'
-                        />
-                    </TouchableOpacity>
                     <Animatable.Image
                             source={require('../assets/unDrawVerify.png')}
                             animation='zoomInDown'
@@ -88,7 +74,7 @@ const Verify = ({navigation, route,dispatch}) => {
                     <View style={styles.verificationContainer}>
                         <View style={styles.textBox}>
                             <Text style={styles.headerTxt}>Verification</Text>
-                            <Text style={styles.p}>Please type the verification code sent to 98******.</Text>
+                            <Text style={styles.p}>{`Please type the verification code sent to ${route.params.phoneNumber[0]}${route.params.phoneNumber[1]}******`}</Text>
                             <OTPInputView 
                                 style={{width: '80%', height: 200,justifyContent:'center',alignItems:'center',flexDirection:'row'}}
                                 pinCount={6}
@@ -115,7 +101,7 @@ const Verify = ({navigation, route,dispatch}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1C1C32'
+        backgroundColor: '#16171B'
     },
     logoContainer: {
         flex: 1.5,
@@ -123,7 +109,7 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     verificationContainer: {
-        flex:3,
+        flex:5,
         margin: '5%',
         padding : 5,
         alignItems: 'center',

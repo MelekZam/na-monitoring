@@ -8,11 +8,31 @@ const DropDown = ({ token, system, network, navigation, problems }) => {
     
   const [expanded, setExpanded] = React.useState(false);
   const handlePress = () => setExpanded(!expanded);
-  const [mounted, setMounted] = useState(false)
+  const [mountedSystem, setMountedSystem] = useState(false);
+  const [mountedNetowrk, setMountedNetwork] = useState(false);
+  const [showSystem, setShowSystem] = useState(false)
+  const [showNetwork, setShowNetwork] = useState(false)
+
+  let interval;
+  let interval1;
+
   useEffect(() => {
-    const interval = setTimeout(() => {setMounted(!mounted);console.log('test')}, 2000)
+    if (showSystem)
+      interval = setTimeout(() => setMountedSystem(!mountedSystem), 1500)
+    else
+      clearTimeout(interval)
     return () => clearTimeout(interval)
-  }, [mounted])
+  }, [mountedSystem,showSystem])
+
+  useEffect(() => {
+    if (showNetwork)
+      interval1 = setTimeout(() => setMountedNetwork(!mountedNetowrk), 1500)
+    else
+      clearTimeout(interval1)
+    return () => clearTimeout(interval1)
+  }, [mountedNetowrk,showNetwork])
+
+
   
     return (
       <ScrollView>
@@ -20,13 +40,14 @@ const DropDown = ({ token, system, network, navigation, problems }) => {
           <List.Accordion
             title={`System Hosts  (${system.length})`}
             left={props => <List.Icon {...props} color='white' icon="server" />}
+            onPress={() => setShowSystem(!showSystem)}
           >
             {system.map((item) => {
                 return <List.Item style={{paddingHorizontal:35}} key={item.id} title={item.name}
-                          right={props =>{  if (problems.disaster.filter(problem => problem.host.id === item.id).length ) return <List.Icon {...props} color='#E45959' icon={mounted ? "alert-circle-outline" : "alert-circle"} />
-                                            else if (problems.high.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#F37353' icon={mounted ? "alert-circle-outline" : "alert-circle"} />
-                                            else if (problems.average.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#FFA059' icon={mounted ? "alert-circle-outline" : "alert-circle"} />
-                                            else if (problems.warning.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#FFC859' icon={mounted ? "alert-circle-outline" : "alert-circle"} />
+                          right={props =>{  if (problems.disaster.filter(problem => problem.host.id === item.id).length ) return <List.Icon {...props} color='#E45959' icon={mountedSystem ? "alert-circle-outline" : "alert-circle"} />
+                                            else if (problems.high.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#F37353' icon={mountedSystem ? "alert-circle-outline" : "alert-circle"} />
+                                            else if (problems.average.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#FFA059' icon={mountedSystem ? "alert-circle-outline" : "alert-circle"} />
+                                            else if (problems.warning.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#FFC859' icon={mountedSystem ? "alert-circle-outline" : "alert-circle"} />
                         }}
                           onPress={ () => { navigation.navigate('Items', {
                             name:item.name,
@@ -41,15 +62,14 @@ const DropDown = ({ token, system, network, navigation, problems }) => {
           <List.Accordion
             title={`Network Hosts  (${network.length})`}
             left={props => <List.Icon {...props} color='white' icon="router" />}
-            expanded={expanded}
-            onPress={handlePress}
+            onPress={() => setShowNetwork(!showNetwork)}
             >
               {network.map((item) => {
                 return <List.Item style={{paddingHorizontal:35}} key={item.id} title={item.name}
-                          right={props =>{  if (problems.disaster.filter(problem => problem.host.id === item.id).length ) return <List.Icon {...props} color='#E45959' icon="alert-circle-outline" />
-                                            else if (problems.high.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#F37353' icon="alert-circle-outline" />
-                                            else if (problems.average.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#FFA059' icon="alert-circle-outline" />
-                                            else if (problems.warning.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#FFC859' icon="alert-circle-outline" />
+                          right={props =>{  if (problems.disaster.filter(problem => problem.host.id === item.id).length ) return <List.Icon {...props} color='#E45959' icon={mountedNetowrk ? "alert-circle-outline" : "alert-circle"} />
+                                            else if (problems.high.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#F37353' icon={mountedNetowrk ? "alert-circle-outline" : "alert-circle"} />
+                                            else if (problems.average.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#FFA059' icon={mountedNetowrk ? "alert-circle-outline" : "alert-circle"} />
+                                            else if (problems.warning.filter(problem => problem.host.id === item.id).length) return <List.Icon {...props} color='#FFC859' icon={mountedNetowrk ? "alert-circle-outline" : "alert-circle"} />
                         }}
                         onPress={ () => { navigation.navigate('Items', {
                           name: item.name,

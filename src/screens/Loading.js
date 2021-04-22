@@ -8,13 +8,21 @@ import GetUsers from '../../service/GetUsers'
 
 const Loading = ({ navigation, user,dispatch }) => {
     const [ mounted, setMounted ] = useState(true)
+    const [ changing, setChanging ] = useState(true)
+    const [ points, setPoints ] = useState(0)
 
     // fetch for the first time when we are in loading screen
     useEffect( async () => {
-        const hosts = await getHosts(user.token)
-        const problems = await GetProblems(user.token, [...hosts.network,...hosts.system])
-        const users = await GetUsers(user.token)
-        //update redux store with new data
+        try { const hosts = await getHosts(user.token)
+        const promises = []
+        promises[0] = GetProblems(user.token, [...hosts.network,...hosts.system])
+        promises[1] = GetUsers(user.token)
+        let problems, users
+        await Promise.all(promises).then( results => {
+            problems = results[0]
+            users = results[1]
+        })
+        // update redux store with new data
         let action = {type: 'UPDATE', value: { hosts, problems }}
         dispatch(action)
         const action1= { type: 'ADD_USERS', value: users }
@@ -22,8 +30,20 @@ const Loading = ({ navigation, user,dispatch }) => {
         navigation.reset({
             index: 0,
             routes: [{ name: 'DashboardStack' }],
-        })
+        })}
+        catch(e) {
+            console.log('error')
+            setMounted(!mounted)
+        }
     },[mounted])
+
+    useEffect(() => {
+        const interval = setTimeout(() => {
+            setPoints((points+1)%3)
+            setChanging(!changing)
+        },1000)
+        return () => clearTimeout(interval)
+    }, [changing])
 
     return (
         <View  style={styles.container}>
@@ -33,7 +53,7 @@ const Loading = ({ navigation, user,dispatch }) => {
                 </View>
             </View>
             <View style={{flex:1}}>
-                <Text style={styles.text}>Fetching Data From Zabbix . . .</Text>
+                <Text style={styles.text}>Fetching Data From Zabbix {points ===0 && '.'}{points ===1 && '. .'}{points ===2 && '. . .'}</Text>
             </View>
         </View>
     )

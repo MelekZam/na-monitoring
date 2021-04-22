@@ -15,6 +15,16 @@ import Acknowledge from '../screens/Acknowledge'
 const Stack = createStackNavigator();
 
 const WelcomeStack = (props) => {
+  const customHeader = {
+    headerShown: true,
+    headerTitleAlign: 'center',
+    title: '',
+    headerTintColor: 'white',
+    headerStyle: {
+        backgroundColor: '#16171B',
+        shadowColor: 'transparent'
+    }
+  }
    /* if user is already logged in go to loading screen => dashboard, else go to welcome screen */
   return (
       <Stack.Navigator>
@@ -25,12 +35,12 @@ const WelcomeStack = (props) => {
               component={Welcome}
             />
             <Stack.Screen
-              options={{headerShown: false}}
+              options={customHeader}
               name='LogIn'
               component={LogIn}
             />
             <Stack.Screen
-              options={{headerShown: false}}
+              options={customHeader}
               name='Verify'
               component={Verify}
             />

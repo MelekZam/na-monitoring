@@ -6,7 +6,7 @@ import GetProblems from '../../service/GetProblems'
 import { connect } from 'react-redux'
 import AckItem from '../../src/components/AckItem'
 
-const Acknowledge = ({ route, dispatch, navigation, listOfUsers }) => {
+const Acknowledge = ({ route, dispatch, navigation, listOfUsers, hosts }) => {
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     }, [])
@@ -24,8 +24,9 @@ const Acknowledge = ({ route, dispatch, navigation, listOfUsers }) => {
         setInputStyle('#7f00f9')
     }
     const request = async () => {
-        const reponse = await AckRequest(id, token, message, severity, closed, acknowledged)
-        const problems = await GetProblems(token)
+        await AckRequest(id, token, message, severity, closed, acknowledged)
+        const problems = await GetProblems(token, [...hosts.network,...hosts.system])
+        console.log('test')
         const action = { type: 'UPDATE_PROBLEMS', value: problems}
         dispatch(action)
         navigation.goBack()
@@ -114,6 +115,7 @@ const styles= StyleSheet.create({
       textArea: {
         height: 150,
         textAlignVertical: 'top',
+        color:'white'
       },
       title: {
         color: 'white',
