@@ -8,6 +8,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import Svg, { G, Circle, Rect } from 'react-native-svg';
+import * as Animatable from 'react-native-animatable';
+
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -61,7 +63,7 @@ export default function Donut({
   });
 
   return (
-    <View style={{ width: radius * 2, height: radius * 2 }}>
+    <Animatable.View animation='pulse' duration={1500} style={{ width: radius * 2, height: radius * 2 }}>
       <Svg
         height={radius * 2}
         width={radius * 2}
@@ -104,7 +106,7 @@ export default function Donut({
           styles.text,
         ]}
       />
-    </View>
+    </Animatable.View>
   );
 }
 

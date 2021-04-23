@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         width:350
       },
       textBox:{
-        marginLeft: 10,
+        marginHorizontal: 10,
         flexDirection: 'column',
         justifyContent:'space-around',
         flexShrink: 1

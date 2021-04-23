@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet,ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
 import Donut from '../components/shared/Donut'
@@ -19,7 +19,6 @@ PushNotification.createChannel(
     importance: 4, // (optional) default: 4. Int value of the Android notification importance
     vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
   },
-  (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
 );
 let goToProblems = () => {
 
@@ -30,7 +29,6 @@ PushNotification.configure({
   },
 
   onNotification: function (notification) {
-    console.log("NOTIFICATION:", notification);
     goToProblems()
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   },
@@ -46,6 +44,9 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
   }
 
   const [ mounted, setMounted ] = useState(true)
+  const [ showAvailable, setShowAvailable ] = useState(false)
+  const [ showUnavailable, setShowUnavailable ] = useState(false)
+  const [ showUnknown, setShowUnknown ] = useState(false)
   const { all, disaster, high, average, warning } = problems
   
   const checkNewProblems = ( newArray ) => {
@@ -118,9 +119,9 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
             </View>
             <Text style={{fontSize: 17,color: 'white',alignSelf: 'center', marginTop:10}} >Total Number Of Hosts : {hosts.network.length + hosts.system.length} </Text>
             <View style={{marginTop: 5,justifyContent:'space-around', flexDirection: 'row'}}>
-              <HostBox color='#86CC89' number={hosts.available.length} status='Available'/>
-              <HostBox color='#E45959' number={hosts.unavailable.length} status='Unvailable'/>
-              <HostBox color='#97AAB3' number={hosts.unknown.length} status='Uknown'/>
+              <TouchableOpacity style={{flex:1}} onPress={() => { if (hosts.available.length>0) setShowAvailable(!showAvailable)}} ><HostBox color='#86CC89' data={showAvailable ? hosts.available : null} number={hosts.available.length} status='Available'/></TouchableOpacity>
+              <TouchableOpacity style={{flex:1}} onPress={() => {if (hosts.unavailable.length>0) setShowUnavailable(!showUnavailable)}} ><HostBox color='#E45959' data={showUnavailable ? hosts.unavailable : null} number={hosts.unavailable.length} status='Unvailable'/></TouchableOpacity>
+              <TouchableOpacity style={{flex:1}} onPress={() => {if (hosts.unknown.length>0) setShowUnknown(!showUnknown)}} ><HostBox color='#97AAB3' data={showUnknown ? hosts.unknown : null} number={hosts.unknown.length} status='Uknown'/></TouchableOpacity>
             </View>
             <Text style={{fontSize: 17,color: 'white',alignSelf: 'center', marginTop:15}} >Problems By Severity</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center',marginTop: 5}}>
