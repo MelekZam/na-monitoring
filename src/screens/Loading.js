@@ -6,7 +6,7 @@ import getHosts from '../../service/getHosts'
 import GetProblems from '../../service/GetProblems'
 import GetUsers from '../../service/GetUsers'
 
-const Loading = ({ navigation, user,dispatch }) => {
+const Loading = ({ navigation, user,dispatch, listOfUsers }) => {
     const [ mounted, setMounted ] = useState(true)
     const [ changing, setChanging ] = useState(true)
     const [ points, setPoints ] = useState(0)

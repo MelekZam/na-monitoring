@@ -8,6 +8,7 @@ import GetProblems from '../../service/GetProblems'
 import DropDown from '../components/Dropdown'
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
+import io from 'socket.io-client'
 
 PushNotification.createChannel(
   {
@@ -37,7 +38,7 @@ PushNotification.configure({
   requestPermissions: Platform.OS === 'ios',
 });
 
-const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
+const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
   
   goToProblems = () => {
     navigation.navigate('Problems')
@@ -47,6 +48,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
   const [ showAvailable, setShowAvailable ] = useState(false)
   const [ showUnavailable, setShowUnavailable ] = useState(false)
   const [ showUnknown, setShowUnknown ] = useState(false)
+  const [ connection, setConnection ] = useState(true)
   const { all, disaster, high, average, warning } = problems
   
   const checkNewProblems = ( newArray ) => {
@@ -64,6 +66,24 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
     return res;
   }
 
+  useEffect( async () => {
+    let newSocket
+    if (!socket){
+      newSocket = io('http://192.168.1.21:3000', {
+        query: {
+          id: user.id
+        }
+      })
+      const action = {type: 'CONNECT', value: newSocket}
+      console.log(action)
+      dispatch(action)
+    }
+    newSocket.on('new connection', text => console.log(text))
+    
+    return () => newSocket.close()
+
+  },[connection])
+
   useEffect( () => {
     // fetch data every 30s 
     const interval = setTimeout( async () => {
@@ -79,7 +99,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch }) => {
         });
         // update redux store with new data
         let action = {type: 'UPDATE', value: { hosts, problems }}
-        console.log(action.value.hosts.system)
+        console.log(action)
         dispatch(action)
     } catch(e) {
         console.log('error')

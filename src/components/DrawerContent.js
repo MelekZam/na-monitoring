@@ -56,6 +56,7 @@ const DrawerContent = (props) => {
                             <View style={{alignItems:'center', flexDirection:'row', justifyContent:'flex-start'}}>
                                 <Icon 
                                     name="user-alt"
+                                    size={20}
                                     style={{marginBottom: 'auto',marginTop: 'auto'}}
                                 />
                                 <Title style={styles.title}>{props.user.nickname}</Title>
@@ -96,7 +97,7 @@ const DrawerContent = (props) => {
                                 />
                             )}
                             label="Chat"
-                            onPress={ () => { }}
+                            onPress={ () => {props.navigation.navigate('Chat')}}
                         />
                         
                     </Drawer.Section>

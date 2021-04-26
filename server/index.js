@@ -1,16 +1,22 @@
 const express = require('express')
 const app = express()
+const http = require('http').Server(app)
 const port = 3000
 const config = require('./config')
 const client = require('twilio')(config.ACCOUNT_SID, config.AUTH_TOKEN)
 
-// /login
-//     - phone number
-//     - channel (sms/call)
+const io = require('socket.io',port)(http);
 
-// /verify
-//     - phone number
-//     - code
+let connectedUsers = []
+
+io.on('connection', socket => {
+    const id = socket.handshake.query.id
+    console.log('hi')
+    socket.join(id)
+    connectedUsers = [...connectedUsers, id]
+    io.emit('new connection', connectedUsers)
+})
+
 
 app.get('/', (req, res) => {
     res.status(200).send({
@@ -65,6 +71,6 @@ app.get('/verify', (req, res) => {
 })
 
 // listen to the server at 3000 port
-app.listen(port, () => {
+http.listen(port, () => {
     console.log(`Server is running at ${port}`)
 })

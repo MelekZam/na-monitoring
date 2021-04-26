@@ -38,7 +38,7 @@ const Items = ({route}) => {
             <View style={styles.item}>
               <View style={{width:75}}><HostBox color={ item.status == '0' ? '#86CC89' : '#E45959' } number={null} status={ item.status == '0' ? 'Enabled' : 'Disabled' }/></View>
               <View style={styles.textBox}>
-                <Text style={{color:'white',fontSize:15,fontWeight:'bold'}}>{item.name}</Text>
+                <Text style={{color:'white',fontSize:14,fontWeight:'bold'}}>{item.name}</Text>
                 { item.description ? <Text style={{color:'lightgrey',fontSize:12,fontStyle:'italic'}} numberOfLines={3}>{item.description}</Text> : null }
                 <Text style={{color:'grey',fontSize:10}} numberOfLines={1}>Last Value : {item.lastvalue}</Text>
               </View>
@@ -55,7 +55,7 @@ const Items = ({route}) => {
           <View style={styles.item}>
             <View style={{width:75}}><HostBox color={severityColor[Number(item.priority)]} number={null} status={severityDesc[Number(item.priority)]}/></View>
             <View style={styles.textBox}>
-              <Text style={{color:'white',fontSize:15,fontWeight:'bold'}}>{item.description}</Text>
+              <Text style={{color:'white',fontSize:14,fontWeight:'bold'}}>{item.description}</Text>
               <Text style={{color:'grey',fontSize:12}} numberOfLines={1}>Manual Close : {item.manual_close ? 'Yes' : 'No'}</Text>
               <Text style={{color:'grey',fontSize:12}} numberOfLines={1}>Last Change : {new Date(item.lastchange * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
             </View>
