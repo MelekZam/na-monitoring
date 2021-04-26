@@ -21,7 +21,9 @@ const initialState = {user: {
         disaster: []
     },
     listOfUsers: [],
-    socket: null
+    socket: null,
+    connectedUsers: [],
+    messages: []
 }
 
 function userInfo (state= initialState, action) {
@@ -59,6 +61,11 @@ function userInfo (state= initialState, action) {
         case 'ADD_USERS':
             nextState= {
                 ...state, listOfUsers: action.value
+            }
+            return nextState;
+        case 'UPDATE_CONNECTED':
+            nextState= {
+                ...state, connectedUsers: action.value
             }
             return nextState;
         default:

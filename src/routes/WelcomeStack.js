@@ -11,6 +11,8 @@ import { connect } from 'react-redux'
 import Loading from '../screens/Loading';
 import Items from '../screens/Items'
 import Acknowledge from '../screens/Acknowledge'
+import Conversation from '../screens/Conversation'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const Stack = createStackNavigator();
 
@@ -67,7 +69,8 @@ const WelcomeStack = (props) => {
                 headerStyle: {
                     backgroundColor: '#16171B',
                     shadowColor: 'transparent'
-                }, })}
+                },}
+              )}
             />
             <Stack.Screen
               name='Acknowledge'
@@ -78,7 +81,22 @@ const WelcomeStack = (props) => {
                 headerStyle: {
                     backgroundColor: '#16171B',
                     shadowColor: 'transparent'
-                }, })}
+                },}
+              )}
+            />
+            <Stack.Screen
+              name='Conversation'
+              component={Conversation}
+              options={( {route} ) => ({ headerShown: true,
+                title: route.params.username,
+                headerTitleAlign: 'center',
+                headerTintColor: 'white',
+                headerRight: () => <View style={{marginRight:50,alignItems:'center',justifyContent:'center',}}><Icon name='circle' size={15} color='#86CC70' style={{paddingTop:5}}/></View>,
+                headerStyle: {
+                    backgroundColor: '#16171B',
+                    shadowColor: 'transparent'
+                },}
+              )}
             />
           </>)
           }

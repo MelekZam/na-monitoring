@@ -6,13 +6,14 @@ import getHosts from '../../service/getHosts'
 import GetProblems from '../../service/GetProblems'
 import GetUsers from '../../service/GetUsers'
 
-const Loading = ({ navigation, user,dispatch, listOfUsers }) => {
+const Loading = ({ navigation, user,dispatch, listOfUsers, socket }) => {
     const [ mounted, setMounted ] = useState(true)
     const [ changing, setChanging ] = useState(true)
     const [ points, setPoints ] = useState(0)
 
     // fetch for the first time when we are in loading screen
     useEffect( async () => {
+        console.log(socket)
         try { const hosts = await getHosts(user.token)
         const promises = []
         promises[0] = GetProblems(user.token, [...hosts.network,...hosts.system])

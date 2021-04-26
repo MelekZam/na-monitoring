@@ -2,26 +2,29 @@ import React, { useState } from 'react'
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen'
+import io from 'socket.io-client'
 
+const Chat = ({ user, connectedUsers, navigation, socket }) => {
+    const tempSocket = socket
+    const UserItem = ({item}) => {
+        return (
+            ( item && <TouchableOpacity onPress={() => navigation.navigate('Conversation', {username:item.username})} style={styles.userItem} >
+                <View style={styles.userImg} >
+                    <Icon style={styles.searchIcon} name="user-circle-o" size={50} color="white"/>
+                </View>
+                <View style={styles.userText} >
+                    <Text style={{fontSize:15,color:'lightgrey'}}>{item.username}</Text>
+                    <Text style={{fontSize:12,color:'grey',fontStyle:'italic'}}>Hello! What's up?</Text>
+                </View>
+                <View style={{borderBottomColor: 'lightgrey',borderBottomWidth: .5,justifyContent:'center',alignItems:'center'}}>
+                    <Icon name="circle" size={20} color='#86CC70' style={{marginRight:20}} />
+                </View>
+            </TouchableOpacity>)
+        )
+    }
 
-const UserItem = ({item}) => {
-    return (
-        <TouchableOpacity style={styles.userItem} >
-            <View style={styles.userImg} >
-                <Icon style={styles.searchIcon} name="user-circle-o" size={50} color="white"/>
-            </View>
-            <View style={styles.userText} >
-                <Text style={{fontSize:15,color:'lightgrey',}}>{item.surname}</Text>
-                <Text style={{fontSize:12,color:'grey',fontStyle:'italic'}}>Hello! What's up?</Text>
-            </View>
-        </TouchableOpacity>
-    )
-}
+    const [ searchText, setSearchText ] = useState('')
 
-
-const Chat = ({ user, listOfUsers, navigation, socket }) => {
-    console.log(socket)
     return (
         <ScrollView style={styles.container}>
             <View style={styles.searchSection}>
@@ -31,9 +34,11 @@ const Chat = ({ user, listOfUsers, navigation, socket }) => {
                     placeholder="Search"
                     placeholderTextColor='grey'
                     underlineColorAndroid="transparent"
+                    value={searchText}
+                    onChangeText = { text => setSearchText(text)}
                 />
             </View>
-            {listOfUsers.map(item => { return <UserItem key={item.userid} item={item} /> })}
+            { connectedUsers.map(item => { return <UserItem key={item.id} item={ searchText === '' || item.username.toLowerCase().includes(searchText.toLowerCase()) ? item : null} /> })}
         </ScrollView>
     )
 }

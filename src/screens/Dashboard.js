@@ -48,7 +48,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
   const [ showAvailable, setShowAvailable ] = useState(false)
   const [ showUnavailable, setShowUnavailable ] = useState(false)
   const [ showUnknown, setShowUnknown ] = useState(false)
-  const [ connection, setConnection ] = useState(true)
+  const [ connection, setConnection ] = useState(false)
   const { all, disaster, high, average, warning } = problems
   
   const checkNewProblems = ( newArray ) => {
@@ -67,25 +67,34 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
   }
 
   useEffect( async () => {
-    let newSocket
+    let newSocket = socket
+
     if (!socket){
-      newSocket = io('http://192.168.1.21:3000', {
+      newSocket = io('http://172.29.26.94:3000', {
         query: {
-          id: user.id
+          id: user.id,
+          username: user.nickname
         }
       })
       const action = {type: 'CONNECT', value: newSocket}
       console.log(action)
       dispatch(action)
     }
-    newSocket.on('new connection', text => console.log(text))
+    newSocket.on('new connection', connectedUsers => {
+      console.log(connectedUsers)
+      const action = {type: 'UPDATE_CONNECTED', value: connectedUsers}
+      dispatch(action)
+    })
+    newSocket.on('receive new message', msg => {
+      console.log(msg)
+    })
     
     return () => newSocket.close()
 
   },[connection])
 
   useEffect( () => {
-    // fetch data every 30s 
+    // fetch data every minute 
     const interval = setTimeout( async () => {
       try {
         const hosts = await getHosts(user.token)
