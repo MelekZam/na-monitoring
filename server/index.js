@@ -10,11 +10,22 @@ const io = require('socket.io',port)(http);
 let connectedUsers = []
 
 io.on('connection', socket => {
-    const id = socket.handshake.query.id
+
+    const user = {
+        id: socket.handshake.query.id,
+        username: socket.handshake.query.username
+    }
+
     console.log('hi')
-    socket.join(id)
-    connectedUsers = [...connectedUsers, id]
+    socket.join(user.id)
+    if ( !connectedUsers.includes(user) ) connectedUsers.push(user)
     io.emit('new connection', connectedUsers)
+
+    socket.on('send new message', msg => {
+        console.log(msg)
+        io.to(msg.receiver).emit('receive new message', msg)
+    })
+
 })
 
 
