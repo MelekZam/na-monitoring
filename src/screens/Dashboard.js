@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TouchableHighlight } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
 import Donut from '../components/shared/Donut'
@@ -77,16 +77,15 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
         }
       })
       const action = {type: 'CONNECT', value: newSocket}
-      console.log(action)
       dispatch(action)
     }
     newSocket.on('new connection', connectedUsers => {
-      console.log(connectedUsers)
       const action = {type: 'UPDATE_CONNECTED', value: connectedUsers}
       dispatch(action)
     })
     newSocket.on('receive new message', msg => {
-      console.log(msg)
+      const action = { type: 'UPDATE_MESSAGES', value: msg}
+      dispatch(action)
     })
     
     return () => newSocket.close()

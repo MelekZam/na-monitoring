@@ -1,14 +1,26 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { Provider } from 'react-native-paper'
 import { connect } from 'react-redux'
 import HostBox from '../components/shared/HostBox'
+import { Picker } from '@react-native-picker/picker'
+import { useIsFocused } from '@react-navigation/core'
 
 
-const Problems = ({ user, problems, navigation }) => {
+const Problems = ({ user, problems, navigation, hosts }) => {
+    
     const [ severityDesc, setSeverityDesc ] = useState(['Not Classified','Information','Warning','Average','High','Disaster'])
     const [ severityColor, setSeverityColor ] = useState(['#97AAB3','#7499FF','#FFC859','#FFA059','#F37353','#E45959'])
-    const [ popUP, setPopUP ] = useState(false)
+    const allHosts = [...hosts.system, ...hosts.network]
+    const [ selectedHosts, setSelectedHosts ] = useState(null)
+    const [ selectedProblems, setSelectedProblems ] = useState(problems.all)
+    const isFocused = useIsFocused()
+    
+    useEffect(() => {
+      setSelectedProblems(problems.all)
+      setSelectedHosts(null)
+    },[isFocused])
+
     const renderItem = (item) => {
       return (
         <TouchableOpacity onPress={ () => navigation.navigate('Acknowledge', { token: user.token, id: item.eventid, name: item.name, history: item.acknowledges})}>
@@ -26,9 +38,34 @@ const Problems = ({ user, problems, navigation }) => {
     } 
     return (
       <Provider>
+        <View style={{flexDirection:'row',backgroundColor:'#16171B',padding:10}}>
+          <View style={{flex:1,backgroundColor:'#1F1F23',marginHorizontal:5}}>
+            <Picker
+              selectedValue={selectedProblems}
+              onValueChange={ (itemValue, itemIndex) => setSelectedProblems(itemValue)}
+              style={{color:'white'}}
+            >
+              <Picker.Item label='All Problems' value={problems.all} color='white'/>
+              <Picker.Item label='Disaster' value={problems.disaster} color='white'/>
+              <Picker.Item label='High' value={problems.high} color='white'/>
+              <Picker.Item label='Average' value={problems.average} color='white'/>
+              <Picker.Item label='Warning' value={problems.warning} color='white' />
+            </Picker>
+          </View>
+          <View style={{flex:1,backgroundColor:'#1F1F23',marginHorizontal:5}}>
+            <Picker
+              selectedValue={selectedHosts}
+              onValueChange={ (itemValue, itemIndex) => setSelectedHosts(itemValue)}
+              style={{color:'white'}}
+            >
+                <Picker.Item label='All Hosts' color='white' value={null}/>
+                {allHosts.map( host => { return <Picker.Item color='white' key={host.id} label={host.name} value={host.name} />})}
+            </Picker>
+          </View>
+        </View>
         <View style={styles.container}>
-          <FlatList 
-            data={problems.all}
+          <FlatList
+            data={ selectedHosts ? selectedProblems.filter(item => item.host.name === selectedHosts) : selectedProblems}
             keyExtractor={item => item.eventid}
             renderItem={ ({item}) => renderItem(item)}
           />
@@ -36,39 +73,40 @@ const Problems = ({ user, problems, navigation }) => {
       </Provider>
     )
 }
-const styles = StyleSheet.create({
-    container:{
-      flex: 1,
-      backgroundColor: '#16171B',
-      justifyContent:'center',
-      alignItems:'center'
-    },
-    problemItem: {
-      flexDirection:'row',
-      margin: 10,
-      backgroundColor: '#1F1F23',
-      borderRadius: 5,
-      shadowColor:'black',
-      shadowOffset: { width: 0, height: 10},
-      shadowOpacity: 0.5,
-      elevation: 1.5,
-      padding: 5,
-      width:350
-    },
-    textBox:{
-      marginLeft: 10,
-      flexDirection: 'column',
-      justifyContent:'space-around',
-      flexShrink: 1
-    },
-    popupContainer: {
-      marginHorizontal: 10,
-      marginVertical:50
-    }
-  })
 
-  const mapStateToProps = (state) => {
-    return state;
+const styles = StyleSheet.create({
+  container:{
+    flex: 1,
+    backgroundColor: '#16171B',
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  problemItem: {
+    flexDirection:'row',
+    margin: 10,
+    backgroundColor: '#1F1F23',
+    borderRadius: 5,
+    shadowColor:'black',
+    shadowOffset: { width: 0, height: 10},
+    shadowOpacity: 0.5,
+    elevation: 1.5,
+    padding: 5,
+    width:350
+  },
+  textBox:{
+    marginLeft: 10,
+    flexDirection: 'column',
+    justifyContent:'space-around',
+    flexShrink: 1
+  },
+  popupContainer: {
+    marginHorizontal: 10,
+    marginVertical:50
   }
-  
-  export default connect(mapStateToProps)(Problems);
+})
+
+const mapStateToProps = (state) => {
+  return state;
+}
+
+export default connect(mapStateToProps)(Problems);

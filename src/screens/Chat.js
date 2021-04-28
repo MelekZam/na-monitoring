@@ -4,11 +4,10 @@ import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import io from 'socket.io-client'
 
-const Chat = ({ user, connectedUsers, navigation, socket }) => {
-    const tempSocket = socket
+const Chat = ({ user, connectedUsers, navigation }) => {
     const UserItem = ({item}) => {
         return (
-            ( item && <TouchableOpacity onPress={() => navigation.navigate('Conversation', {username:item.username})} style={styles.userItem} >
+            ( item.id !== user.id && <TouchableOpacity onPress={() => navigation.navigate('Conversation', {username: item.username, id: item.id})} style={styles.userItem} >
                 <View style={styles.userImg} >
                     <Icon style={styles.searchIcon} name="user-circle-o" size={50} color="white"/>
                 </View>
@@ -69,6 +68,7 @@ const styles = StyleSheet.create({
         paddingLeft: 0,
         backgroundColor: '#1F1F23',
         color: '#fff',
+        borderRadius:7
     },
     userItem: {
         flexDirection: 'row',

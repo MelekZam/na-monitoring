@@ -68,6 +68,11 @@ function userInfo (state= initialState, action) {
                 ...state, connectedUsers: action.value
             }
             return nextState;
+        case 'UPDATE_MESSAGES':
+            nextState= {
+                ...state, messages: [...state.messages, action.value]
+            }
+            return nextState;
         default:
             return state;
     }

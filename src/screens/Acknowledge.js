@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, TextInput, ScrollView, FlatList, SafeAreaView, LogBox } from 'react-native'
+import { View, Text, StyleSheet, TextInput, ScrollView, FlatList, SafeAreaView, LogBox, ActivityIndicator } from 'react-native'
 import { Checkbox, Button } from 'react-native-paper'
 import AckRequest from '../../service/AckRequest'
 import GetProblems from '../../service/GetProblems'
@@ -17,6 +17,7 @@ const Acknowledge = ({ route, dispatch, navigation, listOfUsers, hosts }) => {
     const [ message, setMessage ] = useState('')
     const [ acknowledged, setAcknowledged ] = useState(false)
     const { id, token, name, history } = route.params
+    const [ loading, setLoading ] = useState(false)
     const onBlur = () => {
         setInputStyle('grey')
     }
@@ -24,16 +25,16 @@ const Acknowledge = ({ route, dispatch, navigation, listOfUsers, hosts }) => {
         setInputStyle('#7f00f9')
     }
     const request = async () => {
+        setLoading(true)
         await AckRequest(id, token, message, severity, closed, acknowledged)
         const problems = await GetProblems(token, [...hosts.network,...hosts.system])
-        console.log('test')
         const action = { type: 'UPDATE_PROBLEMS', value: problems}
         dispatch(action)
         navigation.goBack()
     }
     return (
-        <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
-            <View style={styles.contentContainer}>
+        <ScrollView keyboardShouldPersistTaps='handled' style={styles.container} contentContainerStyle={loading && {flex:1,justifyContent:'center',alignItems:'center'}}>
+            {!loading ? <View style={styles.contentContainer}>
                 <Text style={{fontSize:19,fontWeight:'bold',color:'white',marginBottom:20,textAlign:'center'}} >{name}</Text>
                 <Text style={styles.title}>Message</Text>
                 <View style={{borderColor: inputStyle, borderWidth: 1, padding: 5, borderRadius: 5}} >
@@ -91,7 +92,7 @@ const Acknowledge = ({ route, dispatch, navigation, listOfUsers, hosts }) => {
                         renderItem = {item => <AckItem users={listOfUsers} item={item} />}
                     />
                 </SafeAreaView>
-            </View>
+            </View> : <ActivityIndicator size="large" color='#2196f3' />}
         </ScrollView>
     )
 }
