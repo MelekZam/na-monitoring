@@ -46,18 +46,16 @@ index 38d380b..b465de6 100644
  
    const expandedInternal = expandedProp !== undefined ? expandedProp : expanded;
 diff --git a/node_modules/react-native-paper/src/components/List/ListIcon.tsx b/node_modules/react-native-paper/src/components/List/ListIcon.tsx
-index e57f279..2eac958 100644
+index e57f279..bafbe56 100644
 --- a/node_modules/react-native-paper/src/components/List/ListIcon.tsx
 +++ b/node_modules/react-native-paper/src/components/List/ListIcon.tsx
-@@ -43,7 +43,7 @@ const ICON_SIZE = 24;
-  */
- const ListIcon = ({ icon, color: iconColor, style }: Props) => (
-   <View style={[styles.item, style]} pointerEvents="box-none">
--    <Icon source={icon} size={ICON_SIZE} color={iconColor} />
-+    <Icon color={iconColor} source={icon} size={ICON_SIZE}/>
-   </View>
- );
+@@ -1,5 +1,6 @@
+ import * as React from 'react';
+ import { View, ViewStyle, StyleSheet, StyleProp } from 'react-native';
++import { color } from 'react-native-reanimated';
+ import Icon, { IconSource } from '../Icon';
  
+ type Props = {
 diff --git a/node_modules/react-native-paper/src/components/List/ListItem.tsx b/node_modules/react-native-paper/src/components/List/ListItem.tsx
 index 1110fae..de3a38a 100644
 --- a/node_modules/react-native-paper/src/components/List/ListItem.tsx

@@ -5,16 +5,16 @@ import { connect } from 'react-redux'
 
 
 
-const Conversation = ({user, socket, route, messages}) =>  {
+const Conversation = ({user, socket, route, messages, dispatch}) =>  {
     
     const Message = ({ message }) => {
-        return ( message.sender === user.id && <><LinearGradient
+        return ( <>{message.sender === user.id && <LinearGradient
             style={styles.fromMe}
             colors={['#4776E6','#8E54E9']}
             start={{x: 0, y: 0}} end={{x: 1, y: 0}}
         >
             <Text style={{color:'white'}} >{message.text}</Text>
-        </LinearGradient> 
+        </LinearGradient>} 
         {message.receiver === user.id && <LinearGradient
         style={styles.toMe}
         colors={['grey','grey']}
@@ -27,7 +27,9 @@ const Conversation = ({user, socket, route, messages}) =>  {
     
     const sendMessage = () => {
         const newText = text.trim()
-        if (newText!=='') { 
+        if (newText!=='') {
+            const action = {type: 'UPDATE_MESSAGES', value: {receiver: route.params.id, sender: user.id, text: newText}}
+            dispatch(action)
             socket.emit('send new message', {receiver: route.params.id, sender: user.id, text: newText})
             setText('')
         }
