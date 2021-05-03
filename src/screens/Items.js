@@ -32,11 +32,11 @@ const Items = ({route}) => {
     // state for search input
     const [searchText, setSearchText ] = useState('')
 
-    const renderItem = (item) => {
+    const RenderItem = ({item, onPress}) => {
         return (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPress} >
             <View style={styles.item}>
-              <View style={{width:75}}><HostBox color={ item.status == '0' ? '#86CC89' : '#E45959' } number={null} status={ item.status == '0' ? 'Enabled' : 'Disabled' }/></View>
+              <View style={{width:90}}><HostBox color={ item.status == '0' ? '#86CC89' : '#E45959' } number={null} status={ item.status == '0' ? 'Enabled' : 'Disabled' }/></View>
               <View style={styles.textBox}>
                 <Text style={{color:'white',fontSize:14,fontWeight:'bold'}}>{item.name}</Text>
                 { item.description ? <Text style={{color:'lightgrey',fontSize:12,fontStyle:'italic'}} numberOfLines={3}>{item.description}</Text> : null }
@@ -47,25 +47,23 @@ const Items = ({route}) => {
         )
     }
 
-    const renderTrigger = (item) => {
+    const RenderTrigger = ({item}) => {
       const severityDesc = ['Not Classified','Information','Warning','Average','High','Disaster']
       const severityColor = ['#97AAB3','#7499FF','#FFC859','#FFA059','#F37353','#E45959']
       return (
-        <TouchableOpacity>
-          <View style={styles.item}>
-            <View style={{width:75}}><HostBox color={severityColor[Number(item.priority)]} number={null} status={severityDesc[Number(item.priority)]}/></View>
-            <View style={styles.textBox}>
-              <Text style={{color:'white',fontSize:14,fontWeight:'bold'}}>{item.description}</Text>
-              <Text style={{color:'grey',fontSize:12}} numberOfLines={1}>Manual Close : {item.manual_close ? 'Yes' : 'No'}</Text>
-              <Text style={{color:'grey',fontSize:12}} numberOfLines={1}>Last Change : {new Date(item.lastchange * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
-            </View>
+        <View style={styles.item}>
+          <View style={{width:90}}><HostBox color={severityColor[Number(item.priority)]} number={null} status={severityDesc[Number(item.priority)]}/></View>
+          <View style={styles.textBox}>
+            <Text style={{color:'white',fontSize:14,fontWeight:'bold'}}>{item.description}</Text>
+            <Text style={{color:'grey',fontSize:12}} numberOfLines={1}>Manual Close : {item.manual_close ? 'Yes' : 'No'}</Text>
+            <Text style={{color:'grey',fontSize:12}} numberOfLines={1}>Last Change : {new Date(item.lastchange * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
           </View>
-        </TouchableOpacity>
+        </View>
       )
     }
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={loading && {flex:1,justifyContent:'center',alignItems:'center'}}>
+        <View style={!loading ? styles.container : {flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#16171B'}}>
           { !loading ? (
             <>
               <View style={styles.contentContainer}>
@@ -86,7 +84,7 @@ const Items = ({route}) => {
                       right=  { props => { return <FlatList
                       data={ searchText!='' ? items.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase())) : items}
                       keyExtractor={item => item.key_}
-                      renderItem={ ({item}) => renderItem(item)}
+                      renderItem={ ({item}) => <RenderItem item={item} onPress={() => console.log('a')}/>}
                       />}
                     }
                     />
@@ -103,8 +101,8 @@ const Items = ({route}) => {
                       right=  { props => { return <FlatList
                       data={triggers}
                       keyExtractor={item => item.triggerid}
-                      renderItem={ ({item}) => renderTrigger(item)}
-                      />}
+                      renderItem={ ({item}) => <RenderTrigger item={item}/>}
+                    />}
                     }
                     />
                   </List.Accordion>
@@ -112,7 +110,7 @@ const Items = ({route}) => {
               </View>
           </>) :  <ActivityIndicator size="large" color='#2196f3' />
           }
-        </ScrollView>
+        </View>
     )
 }
 

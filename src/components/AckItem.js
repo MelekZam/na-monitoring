@@ -8,7 +8,7 @@ const color = ['#97AAB3','#7499FF','#FFC859','#FFA059','#F37353','#E45959']
 const AckItem = ({ item, users }) => {
       return (<View style={styles.ackItem}>
             <View style={styles.textBox}>
-                <Text style={{color:'white',marginVertical:3}}>Date : {new Date(item.item.clock * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
+                <Text style={{color:'white',marginVertical:3}}>Date (GMT) : {new Date(item.item.clock * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
                 <Text style={{color:'white',marginVertical:3}}>User : {users.filter(value => value.id === item.item.id)[0].surname}</Text>
                 <Text style={{color:'white',marginVertical:3}}>Acknowledged : {item.item.action>1 && item.item.action%4 ? 'Yes' : 'no'}</Text>
                 <Text style={{color:'white',marginVertical:3}}>Message : <Text style={{color:'lightgrey',fontSize:12,fontStyle:'italic'}}>{item.item.message}</Text></Text>
