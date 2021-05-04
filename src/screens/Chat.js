@@ -24,13 +24,7 @@ const Chat = ({ user, connectedUsers, navigation, hosts, problems }) => {
     }
 
     const [ searchText, setSearchText ] = useState('')
-    useEffect( async () => {
-        const problemsWithResolved = await GetProblems(user.token, [...hosts.network,...hosts.system], true)
-        problemsWithResolved.push({name:'haha',eventid:'453645321',host:{id:'696969'}})
-        console.log(problemsWithResolved)
-        const resolved = problemsWithResolved.filter(n => !problems.all.some(n2 => n.eventid == n2.eventid || n.host.id == n2.host.id || n.name == n2.name));
-        console.log(resolved)
-    })
+    
     return (
         <ScrollView style={styles.container}>
             <View style={styles.searchSection}>

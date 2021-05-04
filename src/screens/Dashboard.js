@@ -105,8 +105,6 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
           title: "ALERT",
           message: `${data.user} has updated a problem`,
         });
-      else
-        console.log('failed')
     })
     
     return () => newSocket.close()
@@ -136,11 +134,9 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
         });
         // update redux store with new data
         let action = {type: 'UPDATE', value: { hosts, problems }}
-        console.log(action.value)
         dispatch(action)
         const resolved = problemsWithResolved.filter(n => !problems.all.some(n2 => n.eventid == n2.eventid || n.host.id == n2.host.id || n.name == n2.name));
         const action2 = {type: 'UPDATE_RESOLVED', value: resolved}
-        console.log(action.value)
         dispatch(action2)
     } catch(e) {
         console.log('error')
