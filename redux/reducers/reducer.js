@@ -18,7 +18,8 @@ const initialState = {user: {
         warning: [],
         average: [],
         high: [],
-        disaster: []
+        disaster: [],
+        resolved: [],
     },
     listOfUsers: [],
     socket: null,
@@ -51,6 +52,11 @@ function userInfo (state= initialState, action) {
         case 'UPDATE_PROBLEMS':
             nextState= {
                 ...state, problems : action.value
+            }
+            return nextState;
+        case 'UPDATE_RESOLVED':
+            nextState= {
+                ...state, problems: {...state.problems, resolved: action.value}
             }
             return nextState;
         case 'CONNECT':

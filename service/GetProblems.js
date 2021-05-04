@@ -1,5 +1,5 @@
 import { zabbixURL }  from './Config'
-const GetProblems1 = async (token, host) => {
+const GetProblems1 = async (token, host, recent) => {
     const url = new URL(zabbixURL)
     const rawResponse = await fetch(url, {
         method: 'POST',
@@ -12,6 +12,7 @@ const GetProblems1 = async (token, host) => {
             "params": {
                 "output":["name","severity","acknowledged","clock","eventid","acknowledges"],
                 "hostids": [host.id],
+                "recent": recent,
                 "selectAcknowledges": "extend"
             },
             "auth": token,
@@ -25,7 +26,7 @@ const GetProblems1 = async (token, host) => {
     return response.result
 }
 
-const GetProblems = async (token, hosts) => {
+const GetProblems = async (token, hosts, recent) => {
     const problems = {
         warning: [],
         average: [],
@@ -37,7 +38,7 @@ const GetProblems = async (token, hosts) => {
     const promises = []
     for (var i = 0; i<l;i++){
         const host = hosts[i]
-        promises.push( GetProblems1(token, host) )
+        promises.push( GetProblems1(token, host, recent) )
     }
     return Promise.all(promises)
     .then(results => {
@@ -53,7 +54,9 @@ const GetProblems = async (token, hosts) => {
             });
             problems.all.push(...results[i])
         }
-        return problems
+        if (!recent)
+            return problems
+        return problems.all 
     })
     .catch(e => console.log(e))
 }

@@ -15,17 +15,25 @@ const Problems = ({ user, problems, navigation, hosts }) => {
     const [ selectedHosts, setSelectedHosts ] = useState(null)
     const [ selectedProblems, setSelectedProblems ] = useState(problems.all)
     const isFocused = useIsFocused()
+    const [ mounted, setMounted ] = useState(true)
+    const [resolvedAreSelected, setResolvedAreSelected] = useState(false)
     
     useEffect(() => {
       setSelectedProblems(problems.all)
       setSelectedHosts(null)
     },[isFocused])
-
-    const renderItem = (item) => {
+    
+    useEffect(() => {
+      if (JSON.stringify(selectedProblems) == JSON.stringify(problems.resolved))
+        setResolvedAreSelected(true)
+      else
+      setResolvedAreSelected(false)
+    })
+    const RenderItem = ({item, resolved}) => {
       return (
-        <TouchableOpacity onPress={ () => navigation.navigate('Acknowledge', { token: user.token, id: item.eventid, name: item.name, history: item.acknowledges})}>
+        <TouchableOpacity onPress={ () => {if (!resolved) navigation.navigate('Acknowledge', { token: user.token, id: item.eventid, name: item.name, history: item.acknowledges, host: item.host})}}>
           <View style={styles.problemItem}>
-            <View style={{width:90}}><HostBox color={severityColor[parseInt(item.severity)]} number={null} status={severityDesc[parseInt(item.severity)]}/></View>
+            <View style={{width:90}}><HostBox  color={ resolved ? '#86CC89' : severityColor[parseInt(item.severity)]} number={null} status={ resolved ? 'Resolved' : severityDesc[parseInt(item.severity)]}/></View>
             <View style={styles.textBox}>
               <Text style={{color:'white',fontSize:14,fontWeight:'bold'}}>{item.name}</Text>
               <Text style={{color:'white',fontSize:11.5}}>Host : {item.host.name}</Text>
@@ -44,12 +52,15 @@ const Problems = ({ user, problems, navigation, hosts }) => {
               selectedValue={selectedProblems}
               onValueChange={ (itemValue, itemIndex) => setSelectedProblems(itemValue)}
               style={{color:'white'}}
+              dropdownIconColor='white'
+              
             >
-              <Picker.Item label='All Problems' value={problems.all} color='white'/>
-              <Picker.Item label='Disaster' value={problems.disaster} color='white'/>
-              <Picker.Item label='High' value={problems.high} color='white'/>
-              <Picker.Item label='Average' value={problems.average} color='white'/>
-              <Picker.Item label='Warning' value={problems.warning} color='white' />
+              <Picker.Item label='All Problems' value={problems.all} />
+              <Picker.Item label='Disaster' value={problems.disaster} />
+              <Picker.Item label='High' value={problems.high} />
+              <Picker.Item label='Average' value={problems.average} />
+              <Picker.Item label='Warning' value={problems.warning}  />
+              <Picker.Item label='Resolved' value={problems.resolved}  />
             </Picker>
           </View>
           <View style={{flex:1,backgroundColor:'#1F1F23',marginHorizontal:5}}>
@@ -57,9 +68,10 @@ const Problems = ({ user, problems, navigation, hosts }) => {
               selectedValue={selectedHosts}
               onValueChange={ (itemValue, itemIndex) => setSelectedHosts(itemValue)}
               style={{color:'white'}}
+              dropdownIconColor='white'
             >
-                <Picker.Item label='All Hosts' color='white' value={null}/>
-                {allHosts.map( host => { return <Picker.Item color='white' key={host.id} label={host.name} value={host.name} />})}
+                <Picker.Item label='All Hosts'  value={null}/>
+                {allHosts.map( host => { return <Picker.Item  key={host.id} label={host.name} value={host.name} />})}
             </Picker>
           </View>
         </View>
@@ -67,7 +79,7 @@ const Problems = ({ user, problems, navigation, hosts }) => {
           <FlatList
             data={ selectedHosts ? selectedProblems.filter(item => item.host.name === selectedHosts) : selectedProblems}
             keyExtractor={item => item.eventid}
-            renderItem={ ({item}) => renderItem(item)}
+            renderItem={ ({item}) => <RenderItem item={item} resolved={resolvedAreSelected} />}
           />
         </View>
       </Provider>

@@ -1,1 +1,1 @@
-export const zabbixURL = 'http://172.29.26.94/zabbix/api_jsonrpc.php';
+export const zabbixURL = 'http://2532dc6f5265.ngrok.io/zabbix/api_jsonrpc.php';

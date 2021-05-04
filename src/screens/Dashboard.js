@@ -65,12 +65,23 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
     }
     return res;
   }
+  
+  const containsHost = (obj, list) => {
+    console.log(list)
+    let i;
+    console.log(list)
+    for (i = 0; i < list.length; i++) {
+        if (list[i].name === obj.name && list[i].id === obj.id) {
+            return true;
+        }
+    }
+    return false;
+  }
 
   useEffect( async () => {
     let newSocket = socket
-
     if (!socket){
-      newSocket = io('http://172.29.26.94:3000', {
+      newSocket = io('http://192.168.1.23:3000', {
         query: {
           id: user.id,
           username: user.nickname
@@ -87,6 +98,16 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
       const action = { type: 'UPDATE_MESSAGES', value: msg}
       dispatch(action)
     })
+    newSocket.on('acknowledged', data => {
+      if (containsHost(data.host, [...hosts.system, hosts.network]))
+        PushNotification.localNotification({
+          channelId: "channel-id",
+          title: "ALERT",
+          message: `${data.user} has updated a problem`,
+        });
+      else
+        console.log('failed')
+    })
     
     return () => newSocket.close()
 
@@ -97,7 +118,15 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
     const interval = setTimeout( async () => {
       try {
         const hosts = await getHosts(user.token)
-        const problems = await GetProblems(user.token, [...hosts.network,...hosts.system])
+        const promises = []
+        promises[0] = await GetProblems(user.token, [...hosts.network,...hosts.system], false)
+        promises[1] = await GetProblems(user.token, [...hosts.network,...hosts.system], true)
+        let problems, problemsWithResolved;
+        await Promise.all(promises).then( results => {
+          problems = results[0]
+          problemsWithResolved = results[1]
+          problemsWithResolved.push({name:'haha',eventid:'453645321',host:{id:'696969',name:'Zabbix server'},clock:'1',history:[],acknowledged:'1'})
+        })
         // check if there are any new problems
         let newProblems= checkNewProblems( problems.all )
         if (newProblems) PushNotification.localNotification({
@@ -107,13 +136,17 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
         });
         // update redux store with new data
         let action = {type: 'UPDATE', value: { hosts, problems }}
-        console.log(action)
+        console.log(action.value)
         dispatch(action)
+        const resolved = problemsWithResolved.filter(n => !problems.all.some(n2 => n.eventid == n2.eventid || n.host.id == n2.host.id || n.name == n2.name));
+        const action2 = {type: 'UPDATE_RESOLVED', value: resolved}
+        console.log(action.value)
+        dispatch(action2)
     } catch(e) {
         console.log('error')
         setMounted(!mounted)
     }
-    }, 60000 )
+    }, 10000 )
     return () => clearTimeout(interval) // clear fetch loop when logging out
   }, [problems,mounted])
 
@@ -149,7 +182,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
             <View style={{marginTop: 5,justifyContent:'space-around', flexDirection: 'row'}}>
               <TouchableOpacity style={{flex:1}} onPress={() => { if (hosts.available.length>0) setShowAvailable(!showAvailable)}} ><HostBox color='#86CC89' data={showAvailable ? hosts.available : null} number={hosts.available.length} status='Available'/></TouchableOpacity>
               <TouchableOpacity style={{flex:1}} onPress={() => {if (hosts.unavailable.length>0) setShowUnavailable(!showUnavailable)}} ><HostBox color='#E45959' data={showUnavailable ? hosts.unavailable : null} number={hosts.unavailable.length} status='Unvailable'/></TouchableOpacity>
-              <TouchableOpacity style={{flex:1}} onPress={() => {if (hosts.unknown.length>0) setShowUnknown(!showUnknown)}} ><HostBox color='#97AAB3' data={showUnknown ? hosts.unknown : null} number={hosts.unknown.length} status='Uknown'/></TouchableOpacity>
+              <TouchableOpacity style={{flex:1.01}} onPress={() => {if (hosts.unknown.length>0) setShowUnknown(!showUnknown)}} ><HostBox color='#97AAB3' data={showUnknown ? hosts.unknown : null} number={hosts.unknown.length} status='Uknown'/></TouchableOpacity>
             </View>
             <Text style={{fontSize: 17,color: 'white',alignSelf: 'center', marginTop:15}} >Problems By Severity</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center',marginTop: 5}}>

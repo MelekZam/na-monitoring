@@ -6,7 +6,7 @@ import GetProblems from '../../service/GetProblems'
 import { connect } from 'react-redux'
 import AckItem from '../../src/components/AckItem'
 
-const Acknowledge = ({ route, dispatch, navigation, listOfUsers, hosts }) => {
+const Acknowledge = ({ route, dispatch, navigation, listOfUsers, hosts, socket, user }) => {
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     }, [])
@@ -27,8 +27,10 @@ const Acknowledge = ({ route, dispatch, navigation, listOfUsers, hosts }) => {
     const request = async () => {
         setLoading(true)
         await AckRequest(id, token, message, severity, closed, acknowledged)
+        const tempSocket = socket
+        tempSocket.emit('acknowledge', { user: user.nickname, host: route.params.host })
         const problems = await GetProblems(token, [...hosts.network,...hosts.system])
-        const action = { type: 'UPDATE_PROBLEMS', value: problems}
+        const action = { type: 'UPDATE_PROBLEMS', value: problems }
         dispatch(action)
         navigation.goBack()
     }

@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import io from 'socket.io-client'
+import GetProblems from '../../service/GetProblems'
 
-const Chat = ({ user, connectedUsers, navigation }) => {
+const Chat = ({ user, connectedUsers, navigation, hosts, problems }) => {
     const UserItem = ({item}) => {
         return (
             ( item.id !== user.id && <TouchableOpacity onPress={() => navigation.navigate('Conversation', {username: item.username, id: item.id})} style={styles.userItem} >
@@ -23,7 +24,13 @@ const Chat = ({ user, connectedUsers, navigation }) => {
     }
 
     const [ searchText, setSearchText ] = useState('')
-
+    useEffect( async () => {
+        const problemsWithResolved = await GetProblems(user.token, [...hosts.network,...hosts.system], true)
+        problemsWithResolved.push({name:'haha',eventid:'453645321',host:{id:'696969'}})
+        console.log(problemsWithResolved)
+        const resolved = problemsWithResolved.filter(n => !problems.all.some(n2 => n.eventid == n2.eventid || n.host.id == n2.host.id || n.name == n2.name));
+        console.log(resolved)
+    })
     return (
         <ScrollView style={styles.container}>
             <View style={styles.searchSection}>

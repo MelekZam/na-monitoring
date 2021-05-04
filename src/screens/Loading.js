@@ -6,32 +6,38 @@ import getHosts from '../../service/getHosts'
 import GetProblems from '../../service/GetProblems'
 import GetUsers from '../../service/GetUsers'
 
-const Loading = ({ navigation, user,dispatch, listOfUsers, socket }) => {
+const Loading = ({ navigation, user, dispatch, listOfUsers, socket }) => {
     const [ mounted, setMounted ] = useState(true)
     const [ changing, setChanging ] = useState(true)
     const [ points, setPoints ] = useState(0)
 
     // fetch for the first time when we are in loading screen
     useEffect( async () => {
-        console.log(socket)
-        try { const hosts = await getHosts(user.token)
-        const promises = []
-        promises[0] = GetProblems(user.token, [...hosts.network,...hosts.system])
-        promises[1] = GetUsers(user.token)
-        let problems, users
-        await Promise.all(promises).then( results => {
-            problems = results[0]
-            users = results[1]
-        })
-        // update redux store with new data
-        let action = {type: 'UPDATE', value: { hosts, problems }}
-        dispatch(action)
-        const action1= { type: 'ADD_USERS', value: users }
-        dispatch(action1)
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'DashboardStack' }],
-        })}
+        try {
+            const hosts = await getHosts(user.token)
+            const promises = []
+            promises[0] = GetProblems(user.token, [...hosts.network,...hosts.system], false)
+            promises[1] = GetUsers(user.token)
+            promises[2] = GetProblems(user.token, [...hosts.network,...hosts.system], true)
+            let problems, users, problemsWithResolved
+            await Promise.all(promises).then( results => {
+                problems = results[0]
+                users = results[1]
+                problemsWithResolved = results[2]
+            })
+            // update redux store with new data
+            let action = {type: 'UPDATE', value: { hosts, problems }}
+            dispatch(action)
+            const action1 = { type: 'ADD_USERS', value: users }
+            dispatch(action1)
+            const resolved = problemsWithResolved.filter(n => !problems.all.some(n2 => n.eventid == n2.eventid || n.host.id == n2.host.id || n.name == n2.name));
+            const action2 = {type: 'UPDATE_RESOLVED', value: resolved}
+            dispatch(action2)
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'DashboardStack' }],
+            })
+        }
         catch(e) {
             console.log('error')
             setMounted(!mounted)

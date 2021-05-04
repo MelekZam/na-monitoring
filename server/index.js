@@ -18,19 +18,28 @@ const checkAlreadyConnected = (id) => {
 }
 
 io.on('connection', socket => {
-
+    
     const user = {
         id: socket.handshake.query.id,
         username: socket.handshake.query.username
     }
+
     socket.join(user.id)
     if ( !checkAlreadyConnected(user.id) ) {
         connectedUsers.push(user)
     }
+
+    console.log(connectedUsers)
+    
     io.emit('new connection', connectedUsers)
 
     socket.on('send new message', msg => {
         io.to(msg.receiver).emit('receive new message', msg)
+    })
+
+    socket.on('acknowledge', data => {
+        console.log('test server')
+        socket.broadcast.emit('acknowledged', data)
     })
 
 })

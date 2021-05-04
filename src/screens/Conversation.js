@@ -17,7 +17,7 @@ const Conversation = ({user, socket, route, messages, dispatch}) =>  {
         </LinearGradient>} 
         {message.receiver === user.id && <LinearGradient
         style={styles.toMe}
-        colors={['grey','grey']}
+        colors={['#414345','#414345']}
         start={{x: 0, y: 0}} end={{x: 1, y: 0}}
         >
             <Text style={{color:'white'}} >{message.text}</Text>
@@ -35,7 +35,7 @@ const Conversation = ({user, socket, route, messages, dispatch}) =>  {
         }
     }
     
-    let newSocket = socket
+    
     const [ text, setText ] = useState('')
     const ScrollViewRef = useRef()
     
