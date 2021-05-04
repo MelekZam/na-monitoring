@@ -5,7 +5,7 @@ import HostBox from '../components/shared/HostBox'
 import { List, Colors } from 'react-native-paper'
 import GetTriggers from '../../service/GetTriggers'
 
-const Items = ({route}) => {
+const Items = ({route,navigation}) => {
     // Getting the items from zabbix
     const [ mounted, setMounted ] = useState(true)
     const [ items, setItems ] = useState([])
@@ -84,7 +84,18 @@ const Items = ({route}) => {
                       right=  { props => { return <FlatList
                       data={ searchText!='' ? items.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase())) : items}
                       keyExtractor={item => item.key_}
-                      renderItem={ ({item}) => <RenderItem item={item} onPress = { () => {} }/>}
+                      renderItem={ ({item}) => <RenderItem item={item} onPress = { () => navigation.navigate("Item Details",{
+                        value_type : item.value_type,
+                        lastvalue: item.lastvalue,
+                        itemid: item.itemid,
+                        name: item.name,
+                        status: item.status,
+                        key_: item.key_,
+                        description: item.description,
+                    
+
+
+                      }) }/>}
                       />}
                     }
                     />

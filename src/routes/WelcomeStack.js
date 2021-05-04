@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from '../screens/Welcome'
 import LogIn from '../screens/LogIn'
 import Verify from '../screens/Verify'
+import ItemsDetails from '../screens/ItemsDetails'
 import DashboardStack from '../routes/DashboardStack';
 import { connect } from 'react-redux'
 import Loading from '../screens/Loading';
@@ -83,6 +84,17 @@ const WelcomeStack = (props) => {
                     shadowColor: 'transparent'
                 },}
               )}
+            />
+            <Stack.Screen
+              name='Item Details'
+              component={ItemsDetails}
+              options={() => ({ 
+                headerTitleAlign: 'center',
+                headerTintColor: 'white',
+                headerStyle: {
+                    backgroundColor: '#16171B',
+                    shadowColor: 'transparent'
+                }, })}
             />
             <Stack.Screen
               name='Conversation'

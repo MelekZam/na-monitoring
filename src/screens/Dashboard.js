@@ -81,7 +81,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
   useEffect( async () => {
     let newSocket = socket
     if (!socket){
-      newSocket = io('http://192.168.1.23:3000', {
+      newSocket = io('http://172.29.26.15:3000', {
         query: {
           id: user.id,
           username: user.nickname
