@@ -39,14 +39,22 @@ const LogIn = ({navigation,dispatch}) => {
                 dispatch(action)
             } else { // else go to verification screen
                 const phoneNumber = await getUserMedia(result.userid,result.sessionid)
-                console.log(result.sessionid)
-                await axios.get(`http://192.168.1.11:3000/login?phonenumber=216${phoneNumber}&channel=sms`) // send request to localhost node server to send sms to the user's phone using twilio services
-                navigation.navigate('Verify', {
+                if (!phoneNumber){ // if user's phone number doesn't exist ==> login without going to verification screen
+                    await AsyncStorage.setItem('isLoggedIn', 'yes')
+                    const action = { type: 'LOGIN', value: { token: result.sessionid, id: result.userid, nickname: result.surname } }
+                    const userObject = JSON.stringify(action.value)
+                    await AsyncStorage.setItem('user',userObject)
+                    dispatch(action)
+                }
+                else {
+                    await axios.get(`http://192.168.43.215:3000/login?phonenumber=216${phoneNumber}&channel=sms`) // send request to localhost node server to send sms to the user's phone using twilio services
+                    navigation.navigate('Verify', {
                     phoneNumber,
                     token: result.sessionid,
                     id: result.userid,
                     nickname: result.surname,
-                })
+                    })
+                }
             }
           } catch(e) {
             console.log(e)

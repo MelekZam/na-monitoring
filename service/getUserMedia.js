@@ -21,6 +21,8 @@ const getUserMedia = async (id, token) => {
     result = (response.result[0].medias).filter(item => {
         return item.mediatypeid === '3'
     })
-    return result[0].sendto
+    if (result.length)
+        return result[0].sendto
+    return null
 }
 export default getUserMedia;

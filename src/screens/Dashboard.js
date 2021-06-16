@@ -15,13 +15,13 @@ PushNotification.createChannel(
     channelId: "channel-id", // (required)
     channelName: "My channel", // (required)
     channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
-    playSound: false, // (optional) default: true
+    playSound: true, // (optional) default: true
     soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
     importance: 4, // (optional) default: 4. Int value of the Android notification importance
     vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
   },
 );
-let goToProblems = () => {
+let goToDestination = () => {
 
 }
 PushNotification.configure({
@@ -30,7 +30,7 @@ PushNotification.configure({
   },
 
   onNotification: function (notification) {
-    goToProblems()
+    goToDestination(notification.title)
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   },
 
@@ -40,8 +40,11 @@ PushNotification.configure({
 
 const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
   
-  goToProblems = () => {
-    navigation.navigate('Problems')
+  goToDestination = (title) => {
+    if (title == 'ALERT')
+      navigation.navigate('Problems')
+    else 
+      navigation.navigate('Chat')
   }
 
   const [ mounted, setMounted ] = useState(true)
@@ -81,7 +84,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
   useEffect( async () => {
     let newSocket = socket
     if (!socket){
-      newSocket = io('http://172.29.26.15:3000', {
+      newSocket = io('http://192.168.43.215:3000', {
         query: {
           id: user.id,
           username: user.nickname
@@ -104,6 +107,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
           channelId: "channel-id",
           title: "ALERT",
           message: `${data.user} has updated a problem`,
+          soundName: "default"
         });
     })
     
@@ -131,6 +135,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
           channelId: "channel-id",
           title: "ALERT",
           message: newProblems>1 ? `${newProblems} new problems have been detected` : '1 new problem has been detected',
+          soundName: "default",
         });
         // update redux store with new data
         let action = {type: 'UPDATE', value: { hosts, problems }}
@@ -142,7 +147,7 @@ const Dashboard = ({ user, navigation, hosts, problems, dispatch, socket }) => {
         console.log('error')
         setMounted(!mounted)
     }
-    }, 10000 )
+    }, 60000 )
     return () => clearTimeout(interval) // clear fetch loop when logging out
   }, [problems,mounted])
 

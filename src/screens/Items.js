@@ -54,7 +54,7 @@ const Items = ({route,navigation}) => {
         <View style={styles.item}>
           <View style={{width:90}}><HostBox color={severityColor[Number(item.priority)]} number={null} status={severityDesc[Number(item.priority)]}/></View>
           <View style={styles.textBox}>
-            <Text style={{color:'white',fontSize:14,fontWeight:'bold'}}>{item.description}</Text>
+            <Text style={{color:'white',fontSize:14,fontWeight:'bold',flexShrink:1}}>{item.description}</Text>
             <Text style={{color:'grey',fontSize:12}} numberOfLines={1}>Manual Close : {item.manual_close ? 'Yes' : 'No'}</Text>
             <Text style={{color:'grey',fontSize:12}} numberOfLines={1}>Last Change : {new Date(item.lastchange * 1000).toISOString().slice(0, 19).replace('T', '   ')}</Text>
           </View>
@@ -63,7 +63,8 @@ const Items = ({route,navigation}) => {
     }
 
     return (
-        <View style={!loading ? styles.container : {flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#16171B'}}>
+      <ScrollView style={{backgroundColor: '#16171B'}} contentContainerStyle={loading && {flex:1,justifyContent:'center',alignItems:'center'}}>
+        <View style={!loading && styles.container}>
           { !loading ? (
             <>
               <View style={styles.contentContainer}>
@@ -82,6 +83,7 @@ const Items = ({route,navigation}) => {
                     />
                     <List.Item
                       right=  { props => { return <FlatList
+                      scrollEnabled={false}
                       data={ searchText!='' ? items.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase())) : items}
                       keyExtractor={item => item.key_}
                       renderItem={ ({item}) => <RenderItem item={item} onPress = { () => navigation.navigate("Item Details",{
@@ -92,9 +94,6 @@ const Items = ({route,navigation}) => {
                         status: item.status,
                         key_: item.key_,
                         description: item.description,
-                    
-
-
                       }) }/>}
                       />}
                     }
@@ -110,6 +109,7 @@ const Items = ({route,navigation}) => {
                   >
                     <List.Item
                       right=  { props => { return <FlatList
+                      scrollEnabled={false}
                       data={triggers}
                       keyExtractor={item => item.triggerid}
                       renderItem={ ({item}) => <RenderTrigger item={item}/>}
@@ -122,6 +122,7 @@ const Items = ({route,navigation}) => {
           </>) :  <ActivityIndicator size="large" color='#2196f3' />
           }
         </View>
+        </ScrollView>
     )
 }
 
@@ -141,7 +142,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         elevation: 1.5,
         padding: 10,
-        width:350
+        width:350,
+      
       },
       textBox:{
         marginHorizontal: 10,
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
         paddingLeft:10
       },
       contentContainer: {
-        margin:15,
+        margin:5,
         backgroundColor: '#1F1F23',
         borderRadius: 5,
         elevation: 2,
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.5,
         shadowRadius: 1,
-        marginTop:20
+        marginTop:20,
       },
 })
 
